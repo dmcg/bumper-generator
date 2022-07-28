@@ -56,7 +56,7 @@ fun getBodyString(anagram: String) = """
             shadowcolor: "",
             shadowblur: 0,
             stroketext: 0,
-            steps: 40,
+            steps: 20,
             pause: 10,
             endpause: 0,
             verticalshift: 0,
