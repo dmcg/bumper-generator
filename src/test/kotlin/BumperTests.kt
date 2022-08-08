@@ -6,7 +6,7 @@ import kotlin.io.path.writeText
 class BumperTests {
     @Test
     fun test() {
-        val anagram = """ALTON CROOK REFITTING|REFRACTION KING LOTTO|REFACTORING TO KOTLIN"""
+        val anagram = """LIVE|EVIL"""
         renderAnagram(anagram)
     }
 }
@@ -45,7 +45,7 @@ fun getBodyString(anagram: String) = """
             animheight: 360,
             textcolor: "#FFFFFF",
             backgroundcolor: "#000000",
-            font: "Special Elite",
+            font: "Courier",
             borderwidth: 0,
             bordercolor: "",
             cornerradius: 0,
