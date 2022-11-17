@@ -1,19 +1,58 @@
 package com.oneeyedmen.bumper
 
+import com.madgag.gif.fmsware.AnimatedGifEncoder
+import com.madgag.gif.fmsware.GifDecoder
+import io.github.bonigarcia.wdm.WebDriverManager
 import org.intellij.lang.annotations.Language
+import org.openqa.selenium.By
 import java.awt.Color
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
+import java.io.File
 import java.nio.file.Files
 import java.nio.file.Path
+import java.time.Duration
+import java.util.*
 import kotlin.io.path.writeText
 
 fun renderAnagram(anagram: String, imageSpec: ImageSpec) {
     val file = Files.createTempDirectory("bumper").resolve("html.html")
     file.writeText(bodyStringToGenerateGifOf(anagram, imageSpec))
-    openBrowserOn(file)
+    val image = getGeneratedImageBytesFrom(file)
+    val shorterImage = removeLastFewFramesFrom(image)
+    File(anagram + ".gif").writeBytes(shorterImage)
 }
 
-private fun openBrowserOn(file: Path?) {
-    Runtime.getRuntime().exec("open ${file}")
+fun removeLastFewFramesFrom(image: ByteArray): ByteArray {
+    val decoder = GifDecoder()
+    decoder.read(ByteArrayInputStream(image))
+
+    val result = ByteArrayOutputStream()
+    val encoder = AnimatedGifEncoder().apply {
+        start(result)
+        setRepeat(-1)
+    }
+
+
+    for (i in 0..decoder.frameCount - 20) {
+        encoder.addFrame(decoder.getFrame(i))
+        if (i == 0 || i == 22)
+            encoder.setDelay(1000)
+        else
+            encoder.setDelay(decoder.getDelay(i))
+    }
+    encoder.finish()
+    return result.toByteArray()
+}
+
+private fun getGeneratedImageBytesFrom(file: Path): ByteArray {
+    val driver = WebDriverManager.chromedriver().create().apply {
+        manage().timeouts().implicitlyWait(Duration.ofMinutes(1))
+    }
+    driver.get(file.toUri().toString())
+    driver.get(file.toUri().toString())
+    val base64ImageSrc = driver.findElement(By.tagName("img")).getAttribute("src")
+    return Base64.getDecoder().decode(base64ImageSrc.substringAfter("base64,"))
 }
 
 data class ImageSpec(
@@ -29,7 +68,6 @@ fun bodyStringToGenerateGifOf(anagram: String, imageSpec: ImageSpec) = """
     <!DOCTYPE HTML>
     <html>
     <head>
-        <link href='https://fonts.googleapis.com/css?family=Special+Elite' rel='stylesheet' type='text/css'>
         <link href="https://wordsmith.org/awad/style.css" type="text/css" rel="stylesheet">
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"
                 integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>

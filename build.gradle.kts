@@ -12,6 +12,9 @@ repositories {
 }
 
 dependencies {
+    implementation("org.seleniumhq.selenium:selenium-java:4.0.0")
+    implementation("io.github.bonigarcia:webdrivermanager:5.2.3")
+    implementation("com.madgag:animated-gif-lib:1.4")
     testImplementation(kotlin("test"))
 }
 
