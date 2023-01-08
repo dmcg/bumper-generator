@@ -20,7 +20,7 @@ fun renderAnagram(anagram: String, imageSpec: ImageSpec) {
     file.writeText(bodyStringToGenerateGifOf(anagram, imageSpec))
     val image = getGeneratedImageBytesFrom(file)
     val shorterImage = removeLastFewFramesFrom(image)
-    File(anagram + ".gif").writeBytes(shorterImage)
+    File("gifs/$anagram.gif").writeBytes(shorterImage)
 }
 
 fun removeLastFewFramesFrom(image: ByteArray): ByteArray {
