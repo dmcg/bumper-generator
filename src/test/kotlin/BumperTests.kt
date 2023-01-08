@@ -6,14 +6,14 @@ import java.awt.Color.*
 class BumperTests {
     @Test
     fun test() {
-        val anagram = """LIVE|EVIL"""
+        val anagram = """SKITTISH RAMJET TRUNK|THINK MUSKRAT JITTERS|JUNIT HAMKREST STRIKT"""
         renderAnagram(
             anagram,
             ImageSpec(
-                width = 360,
-                height = 240,
-                fontName = "Arial",
-                textColor = BLUE,
+                width = 720,
+                height = 480,
+                fontName = "Courier",
+                textColor = WHITE,
                 backgroundColor = BLACK,
             )
         )
