@@ -62,11 +62,12 @@ private fun process(
     collector: (String) -> Unit,
     prefix: String = ""
 ) {
-    words.filter { it.couldBeMadeFromTheLettersIn(input) }.forEach { word ->
+    val candidateWords = words.filter { it.couldBeMadeFromTheLettersIn(input) }
+    candidateWords.forEach { word ->
         val remainingLetters = input.minusLettersIn(word)
         if (remainingLetters.isNotBlank()) {
 //            println("$prefix $word [$remainingLetters]")
-            process(remainingLetters, words, collector, prefix = "$prefix $word")
+            process(remainingLetters, candidateWords, collector, prefix = "$prefix $word")
         } else {
 //            println("Found $prefix $word")
             collector("$prefix $word".substring(1))
@@ -74,6 +75,16 @@ private fun process(
     }
 }
 
+private fun String.couldBeMadeFromTheLettersIn(letters: String): Boolean {
+    if (this.length > letters.length)
+        return false
+    val lettersAsList = letters.toMutableList()
+    this.forEach { char ->
+        if (!lettersAsList.remove(char))
+            return false
+    }
+    return true
+}
 
 private fun String.minusLettersIn(word: String): String {
     val lettersAsList = this.toMutableList()
@@ -84,11 +95,3 @@ private fun String.minusLettersIn(word: String): String {
     return String(lettersAsList.toCharArray())
 }
 
-private fun String.couldBeMadeFromTheLettersIn(letters: String): Boolean {
-    val lettersAsList = letters.toMutableList()
-    this.forEach { char ->
-        if (!lettersAsList.remove(char))
-            return false
-    }
-    return true
-}
