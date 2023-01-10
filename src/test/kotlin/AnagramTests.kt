@@ -32,14 +32,28 @@ class AnagramTests {
     fun `anagrams for A CAT`() {
         assertEquals(
             setOf("A ACT", "A CAT", "ACTA"),
-            words.anagramsFor("A CAT")
+            words.anagramsFor("A CAT", 3)
         )
     }
 
     @Test
     fun `anagrams for ANAGRAM`(approver: Approver) {
         approver.assertApproved(
-            words.anagramsFor("ANAGRAM").joinToString("\n")
+            words.anagramsFor("ANAGRAM", 3).joinToString("\n")
+        )
+    }
+
+    @Test
+    fun `anagrams for REFACTORING`(approver: Approver) {
+        approver.assertApproved(
+            words.anagramsFor("REFACTORING").joinToString("\n")
+        )
+    }
+
+    @Test
+    fun `anagrams for REFACTORING TO KOTLIN depth 3`(approver: Approver) {
+        approver.assertApproved(
+            words.anagramsFor("REFACTORING TO KOTLIN", depth = 3).joinToString("\n")
         )
     }
 
@@ -50,9 +64,9 @@ class AnagramTests {
     }
 }
 
-fun List<String>.anagramsFor(input: String): Set<String> {
+fun List<String>.anagramsFor(input: String, depth: Int = Int.MAX_VALUE): Set<String> {
     val result = mutableListOf<String>()
-    process(input, this, { result.add(it) })
+    process(input.replace(" ", ""), this, { result.add(it) }, depth = depth)
     return result.map { it.split(" ").sorted().joinToString(" ") }.toSet()
 }
 
@@ -60,18 +74,20 @@ private fun process(
     input: String,
     words: List<String>,
     collector: (String) -> Unit,
-    prefix: String = ""
+    prefix: String = "",
+    depth: Int
 ) {
     val candidateWords = words.filter { it.couldBeMadeFromTheLettersIn(input) }
+    var remainingCandidateWords = candidateWords
     candidateWords.forEach { word ->
         val remainingLetters = input.minusLettersIn(word)
-        if (remainingLetters.isNotBlank()) {
-//            println("$prefix $word [$remainingLetters]")
-            process(remainingLetters, candidateWords, collector, prefix = "$prefix $word")
+        if (remainingLetters.isNotEmpty()) {
+            if (depth > 1)
+                process(remainingLetters, remainingCandidateWords, collector, prefix = "$prefix $word", depth - 1)
         } else {
-//            println("Found $prefix $word")
             collector("$prefix $word".substring(1))
         }
+        remainingCandidateWords = remainingCandidateWords.subList(1, remainingCandidateWords.size)
     }
 }
 
