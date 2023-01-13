@@ -11,6 +11,7 @@ val words: List<String> = (File("./scrabble.txt")
     .readLines()
     .plus(listOf("A", "I", "O")).sorted())
 
+@Suppress("JUnitMalformedDeclaration")
 class AnagramTests {
 
     @Test
@@ -31,7 +32,7 @@ class AnagramTests {
     @Test
     fun `anagrams for A CAT`() {
         assertEquals(
-            setOf("A ACT", "A CAT", "ACTA"),
+            listOf("A ACT", "A CAT", "ACTA"),
             words.anagramsFor("A CAT", 3)
         )
     }
@@ -64,10 +65,10 @@ class AnagramTests {
     }
 }
 
-fun List<String>.anagramsFor(input: String, depth: Int = Int.MAX_VALUE): Set<String> {
+fun List<String>.anagramsFor(input: String, depth: Int = Int.MAX_VALUE): List<String> {
     val result = mutableListOf<String>()
     process(input.replace(" ", ""), this, { result.add(it) }, depth = depth)
-    return result.map { it.split(" ").sorted().joinToString(" ") }.toSet()
+    return result
 }
 
 private fun process(
