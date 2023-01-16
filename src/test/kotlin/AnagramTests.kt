@@ -10,7 +10,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
-val words: List<String> = File("./scrabble.txt").readLines()
+val words: List<String> = File("./words.txt").readLines()
 
 @Suppress("JUnitMalformedDeclaration")
 @TestMethodOrder(MethodOrderer.Alphanumeric::class)
