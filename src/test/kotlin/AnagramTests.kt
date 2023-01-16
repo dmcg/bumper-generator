@@ -10,9 +10,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
-val words: List<String> = (File("./scrabble.txt")
-    .readLines()
-    .plus(listOf("A", "I", "O")).sorted())
+val words: List<String> = File("./scrabble.txt").readLines()
 
 @Suppress("JUnitMalformedDeclaration")
 @TestMethodOrder(MethodOrderer.Alphanumeric::class)
@@ -48,8 +46,8 @@ class AnagramTests {
         )
     }
 
-    @EnabledIfSystemProperty(named = "run-slow-tests", matches = "true")
     @Test
+    @EnabledIfSystemProperty(named = "run-slow-tests", matches = "true")
     fun `04 anagrams for REFACTORING TO KOTLIN depth 3`(approver: Approver) {
         approver.assertApproved(
             words.anagramsFor("REFACTORING TO KOTLIN", depth = 3).joinToString("\n")
