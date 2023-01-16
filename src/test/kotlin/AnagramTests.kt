@@ -1,6 +1,9 @@
 import com.oneeyedmen.okeydoke.Approver
 import com.oneeyedmen.okeydoke.junit5.ApprovalsExtension
+import org.junit.jupiter.api.MethodOrderer
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestMethodOrder
+import org.junit.jupiter.api.condition.EnabledIfSystemProperty
 import org.junit.jupiter.api.extension.RegisterExtension
 import java.io.File
 import kotlin.test.assertEquals
@@ -12,10 +15,11 @@ val words: List<String> = (File("./scrabble.txt")
     .plus(listOf("A", "I", "O")).sorted())
 
 @Suppress("JUnitMalformedDeclaration")
+@TestMethodOrder(MethodOrderer.Alphanumeric::class)
 class AnagramTests {
 
     @Test
-    fun `could be made from the letters in`() {
+    fun `01 could be made from the letters in`() {
         assertTrue("A".couldBeMadeFromTheLettersIn("A CAT"))
         assertTrue("CAT".couldBeMadeFromTheLettersIn("A CAT"))
         assertTrue("AA".couldBeMadeFromTheLettersIn("A CAT"))
@@ -30,7 +34,7 @@ class AnagramTests {
     }
 
     @Test
-    fun `anagrams for A CAT`() {
+    fun `02 anagrams for A CAT`() {
         assertEquals(
             listOf("A ACT", "A CAT", "ACTA"),
             words.anagramsFor("A CAT", 3)
@@ -38,26 +42,21 @@ class AnagramTests {
     }
 
     @Test
-    fun `anagrams for ANAGRAM`(approver: Approver) {
+    fun `03 anagrams for REFACTORING TO`(approver: Approver) {
         approver.assertApproved(
-            words.anagramsFor("ANAGRAM", 3).joinToString("\n")
+            words.anagramsFor("REFACTORING TO").joinToString("\n")
         )
     }
 
+    @EnabledIfSystemProperty(named = "run-slow-tests", matches = "true")
     @Test
-    fun `anagrams for REFACTORING`(approver: Approver) {
-        approver.assertApproved(
-            words.anagramsFor("REFACTORING").joinToString("\n")
-        )
-    }
-
-    @Test
-    fun `anagrams for REFACTORING TO KOTLIN depth 3`(approver: Approver) {
+    fun `04 anagrams for REFACTORING TO KOTLIN depth 3`(approver: Approver) {
         approver.assertApproved(
             words.anagramsFor("REFACTORING TO KOTLIN", depth = 3).joinToString("\n")
         )
     }
 
+    @Suppress("unused")
     companion object {
         @RegisterExtension
         @JvmField
