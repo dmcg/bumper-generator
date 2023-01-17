@@ -13,13 +13,20 @@ private fun process(
     prefix: String = "",
     depth: Int
 ) {
-    val candidateWords = words.filter { it.couldBeMadeFromTheLettersIn(input) }
+    val candidateWords = words.filter {
+        it.couldBeMadeFromTheLettersIn(input)
+    }
     var remainingCandidateWords = candidateWords
     candidateWords.forEach { word ->
         val remainingLetters = input.minusLettersIn(word)
         if (remainingLetters.isNotEmpty()) {
             if (depth > 1)
-                process(remainingLetters, remainingCandidateWords, collector, prefix = "$prefix $word", depth - 1)
+                process(
+                    input = remainingLetters,
+                    words = remainingCandidateWords,
+                    collector = collector, prefix = "$prefix $word",
+                    depth = depth - 1
+                )
         } else {
             collector("$prefix $word".substring(1))
         }
