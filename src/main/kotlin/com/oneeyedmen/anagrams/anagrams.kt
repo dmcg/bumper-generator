@@ -37,19 +37,23 @@ private fun process(
 internal fun String.couldBeMadeFromTheLettersIn(letters: String): Boolean {
     if (this.length > letters.length)
         return false
-    val lettersAsList = letters.toMutableList()
+    val remainingLetters = letters.toCharArray()
     this.forEach { char ->
-        if (!lettersAsList.remove(char))
+        val index = remainingLetters.indexOf(char)
+        if (index == -1)
             return false
+        remainingLetters[index] = '*'
     }
     return true
 }
 
 private fun String.minusLettersIn(word: String): String {
-    val lettersAsList = this.toMutableList()
+    val remainingLetters = this.toCharArray()
     word.forEach { char ->
-        if (!lettersAsList.remove(char))
+        val index = remainingLetters.indexOf(char)
+        if (index == -1)
             error("BAD")
+        remainingLetters[index] = '*'
     }
-    return String(lettersAsList.toCharArray())
+    return String(remainingLetters.filter { it != '*' }.toCharArray())
 }
