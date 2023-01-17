@@ -53,6 +53,25 @@ class AnagramTests {
         )
     }
 
+    @Test fun `word signatures`() {
+        assertEquals("".toLetterBitSet(), "".toLetterBitSet())
+        assertEquals(0, "".toLetterBitSet())
+        assertEquals(1, "A".toLetterBitSet())
+        assertEquals(1, "AA".toLetterBitSet())
+        assertEquals(2, "B".toLetterBitSet())
+        assertEquals("A".toLetterBitSet(), "A".toLetterBitSet())
+        assertEquals("A".toLetterBitSet(), "AA".toLetterBitSet())
+        assertEquals("B".toLetterBitSet(), "B".toLetterBitSet())
+        assertEquals("BA".toLetterBitSet(), "AB".toLetterBitSet())
+        assertEquals("BA".toLetterBitSet(), "ABA".toLetterBitSet())
+
+        assertFalse("A".toLetterBitSet().hasLettersNotIn("A".toLetterBitSet()))
+        assertFalse("AA".toLetterBitSet().hasLettersNotIn("A".toLetterBitSet()))
+        assertFalse("A".toLetterBitSet().hasLettersNotIn("AA".toLetterBitSet()))
+        assertTrue("AB".toLetterBitSet().hasLettersNotIn("A".toLetterBitSet()))
+        assertFalse("A".toLetterBitSet().hasLettersNotIn("AB".toLetterBitSet()))
+    }
+
     @Suppress("unused")
     companion object {
         @RegisterExtension
@@ -60,4 +79,6 @@ class AnagramTests {
         val approvals = ApprovalsExtension("src/test/kotlin")
     }
 }
+
+
 
