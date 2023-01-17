@@ -34,24 +34,13 @@ private fun process(
                 depth = depth - 1
             )
         }
-        remainingCandidateWords = remainingCandidateWords.subList(1, remainingCandidateWords.size)
+        remainingCandidateWords = remainingCandidateWords.subList(
+            1, remainingCandidateWords.size
+        )
     }
 }
 
-internal fun String.couldBeMadeFromTheLettersIn(letters: String): Boolean {
-    if (this.length > letters.length)
-        return false
-    val remainingLetters = letters.toCharArray()
-    this.forEach { char ->
-        val index = remainingLetters.indexOf(char)
-        if (index == -1)
-            return false
-        remainingLetters[index] = '*'
-    }
-    return true
-}
-
-class WordInfo private constructor(
+private class WordInfo(
     val word: String,
     val letterBitSet: Int
 ) {
@@ -73,6 +62,19 @@ internal fun String.toLetterBitSet(): Int {
         result = result or (1 shl char - 'A')
     }
     return result
+}
+
+internal fun String.couldBeMadeFromTheLettersIn(letters: String): Boolean {
+    if (this.length > letters.length)
+        return false
+    val remainingLetters = letters.toCharArray()
+    this.forEach { char ->
+        val index = remainingLetters.indexOf(char)
+        if (index == -1)
+            return false
+        remainingLetters[index] = '*'
+    }
+    return true
 }
 
 private fun String.minusLettersIn(word: String): String {

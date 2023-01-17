@@ -53,7 +53,7 @@ class AnagramTests {
         )
     }
 
-    @Test fun `word signatures`() {
+    @Test fun `letter bit sets`() {
         assertEquals("".toLetterBitSet(), "".toLetterBitSet())
         assertEquals(0, "".toLetterBitSet())
         assertEquals(1, "A".toLetterBitSet())
