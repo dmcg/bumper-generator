@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: com.github.docker-java:docker-java-core:3.2.13">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.docker-java/docker-java-core/3.2.13/5a3af141f152d36aad519c7b3915251111592b60/docker-java-core-3.2.13.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.docker-java/docker-java-core/3.2.13/2f30dc2b158ee049f55a7be67e0d360261c6c902/docker-java-core-3.2.13-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

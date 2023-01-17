@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: org.seleniumhq.selenium:selenium-opera-driver:4.0.0">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.seleniumhq.selenium/selenium-opera-driver/4.0.0/eb778e72e9e9954a856e0a48a2dbf38a03197bbe/selenium-opera-driver-4.0.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.seleniumhq.selenium/selenium-opera-driver/4.0.0/f4c0c95eba038224cd6494d0a33fdd4169aac974/selenium-opera-driver-4.0.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
