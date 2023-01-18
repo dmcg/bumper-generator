@@ -85,5 +85,11 @@ private fun String.minusLettersIn(word: String): String {
             error("BAD")
         remainingLetters[index] = '*'
     }
-    return String(remainingLetters.filter { it != '*' }.toCharArray())
+    val result = CharArray(this.length - word.length)
+    var index = 0
+    remainingLetters.forEach { char ->
+        if (char != '*')
+            result[index++] = char
+    }
+    return String(result)
 }
