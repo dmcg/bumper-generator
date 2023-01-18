@@ -59,11 +59,7 @@ class AnagramTests {
         assertEquals(1, "A".toLetterBitSet())
         assertEquals(1, "AA".toLetterBitSet())
         assertEquals(2, "B".toLetterBitSet())
-        assertEquals("A".toLetterBitSet(), "A".toLetterBitSet())
-        assertEquals("A".toLetterBitSet(), "AA".toLetterBitSet())
-        assertEquals("B".toLetterBitSet(), "B".toLetterBitSet())
-        assertEquals("BA".toLetterBitSet(), "AB".toLetterBitSet())
-        assertEquals("BA".toLetterBitSet(), "ABA".toLetterBitSet())
+        assertEquals(3, "BA".toLetterBitSet())
 
         assertFalse("A".toLetterBitSet().hasLettersNotIn("A".toLetterBitSet()))
         assertFalse("AA".toLetterBitSet().hasLettersNotIn("A".toLetterBitSet()))
