@@ -3,7 +3,7 @@ package com.oneeyedmen.anagrams
 fun List<String>.anagramsFor(input: String, depth: Int = Int.MAX_VALUE): List<String> {
     val result = mutableListOf<String>()
     process(
-        input = WordInfo(input.replace(" ", "")),
+        input = Letters(input.replace(" ", "")),
         words = this.map { word -> WordInfo(word) },
         collector = { result.add(it) },
         depth = depth
@@ -12,46 +12,69 @@ fun List<String>.anagramsFor(input: String, depth: Int = Int.MAX_VALUE): List<St
 }
 
 private fun process(
-    input: WordInfo,
+    input: Letters,
     words: List<WordInfo>,
+    startingIndex: Int = 0,
     collector: (String) -> Unit,
     prefix: String = "",
     depth: Int
 ) {
-    val candidateWords = words.filter { wordInfo ->
-        wordInfo.couldBeMadeFromTheLettersIn(input)
+    val candidateWords = mutableListOf<WordInfo>()
+    val wordsAndRemainingLetters = mutableListOf<Pair<WordInfo, Letters>>()
+    main@ for (i in startingIndex until words.size) {
+        val wordInfo = words[i]
+        if (wordInfo.letterBitSet.hasLettersNotIn(input.letterBitSet)) {
+            continue
+        }
+        val remainingLetterCounts = input.letterCounts.copyOf()
+        var remainingLetterBitSet = input.letterBitSet
+        for (char in wordInfo.word) {
+            val cnt = --remainingLetterCounts[char - 'A']
+            if (cnt < 0)
+                continue@main
+            if (cnt == 0)
+                remainingLetterBitSet = remainingLetterBitSet and (1 shl char - 'A').inv()
+        }
+        val remainingLetters = Letters(
+            input.length - wordInfo.word.length,
+            remainingLetterBitSet,
+            remainingLetterCounts
+        )
+        wordsAndRemainingLetters.add(wordInfo to remainingLetters)
+        candidateWords.add(wordInfo)
     }
-    var remainingCandidateWords = candidateWords
-    candidateWords.forEach { wordInfo ->
-        val remainingLetters = input.minusLettersIn(wordInfo)
+    wordsAndRemainingLetters.forEachIndexed { index, (wordInfo, remainingLetters) ->
         when {
-            remainingLetters.isEmpty() ->
+            remainingLetters.length == 0 ->
                 collector("$prefix ${wordInfo.word}".substring(1))
             depth > 1 -> process(
-                input = WordInfo(remainingLetters),
-                words = remainingCandidateWords,
-                collector = collector, prefix = "$prefix ${wordInfo.word}",
+                input = remainingLetters,
+                words = candidateWords,
+                startingIndex = index,
+                collector = collector,
+                prefix = "$prefix ${wordInfo.word}",
                 depth = depth - 1
             )
         }
-        remainingCandidateWords = remainingCandidateWords.subList(
-            1, remainingCandidateWords.size
-        )
     }
 }
 
 private class WordInfo(
     val word: String,
-    val letterBitSet: Int
 ) {
-    constructor(word: String) : this(word, word.toLetterBitSet())
+    val letterBitSet: Int = word.toLetterBitSet()
+}
 
-    fun couldBeMadeFromTheLettersIn(input: WordInfo) =
-        !letterBitSet.hasLettersNotIn(input.letterBitSet) &&
-                this.word.couldBeMadeFromTheLettersIn(input.word)
-
-    fun minusLettersIn(other: WordInfo): String =
-        this.word.minusLettersIn(other.word)
+private class Letters(
+    val length: Int,
+    val letterBitSet: Int,
+    val letterCounts: IntArray,
+) {
+    constructor(word: String) : this(
+        word.length,
+        word.toLetterBitSet(),
+        IntArray(26).also { word.forEach { ch -> it[ch - 'A']++ } }
+    )
 }
 
 internal fun Int.hasLettersNotIn(other: Int) = (this and other) != this
@@ -62,34 +85,4 @@ internal fun String.toLetterBitSet(): Int {
         result = result or (1 shl char - 'A')
     }
     return result
-}
-
-internal fun String.couldBeMadeFromTheLettersIn(letters: String): Boolean {
-    if (this.length > letters.length)
-        return false
-    val remainingLetters = letters.toCharArray()
-    this.forEach { char ->
-        val index = remainingLetters.indexOf(char)
-        if (index == -1)
-            return false
-        remainingLetters[index] = '*'
-    }
-    return true
-}
-
-private fun String.minusLettersIn(word: String): String {
-    val remainingLetters = this.toCharArray()
-    word.forEach { char ->
-        val index = remainingLetters.indexOf(char)
-        if (index == -1)
-            error("BAD")
-        remainingLetters[index] = '*'
-    }
-    val result = CharArray(this.length - word.length)
-    var index = 0
-    remainingLetters.forEach { char ->
-        if (char != '*')
-            result[index++] = char
-    }
-    return String(result)
 }
