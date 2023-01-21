@@ -16,6 +16,21 @@ val words: List<String> = File("./words.txt").readLines()
 class AnagramTests {
 
     @Test
+    fun `could be made from the letters in`() {
+        assertTrue("A".couldBeMadeFromTheLettersIn("A CAT"))
+        assertTrue("CAT".couldBeMadeFromTheLettersIn("A CAT"))
+        assertTrue("AA".couldBeMadeFromTheLettersIn("A CAT"))
+        assertTrue("ACT".couldBeMadeFromTheLettersIn("A CAT"))
+
+        assertFalse("H".couldBeMadeFromTheLettersIn("A CAT"))
+        assertFalse("AAH".couldBeMadeFromTheLettersIn("A CAT"))
+        assertFalse("TAT".couldBeMadeFromTheLettersIn("A CAT"))
+
+        assertTrue("".couldBeMadeFromTheLettersIn("A CAT"))
+        assertTrue("".couldBeMadeFromTheLettersIn(""))
+    }
+
+    @Test
     fun `anagrams for A CAT`() {
         assertEquals(
             listOf("A ACT", "A CAT", "ACTA"),
