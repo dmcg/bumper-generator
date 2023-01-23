@@ -30,6 +30,21 @@ class AnagramTests {
         assertTrue("".couldBeMadeFromTheLettersIn(""))
     }
 
+    @Test fun `letter bit sets`() {
+        assertEquals("".toLetterBitSet(), "".toLetterBitSet())
+        assertEquals(0, "".toLetterBitSet())
+        assertEquals(1, "A".toLetterBitSet())
+        assertEquals(1, "AA".toLetterBitSet())
+        assertEquals(2, "B".toLetterBitSet())
+        assertEquals(3, "BA".toLetterBitSet())
+
+        assertFalse("A".toLetterBitSet().hasLettersNotIn("A".toLetterBitSet()))
+        assertFalse("AA".toLetterBitSet().hasLettersNotIn("A".toLetterBitSet()))
+        assertFalse("A".toLetterBitSet().hasLettersNotIn("AA".toLetterBitSet()))
+        assertTrue("AB".toLetterBitSet().hasLettersNotIn("A".toLetterBitSet()))
+        assertFalse("A".toLetterBitSet().hasLettersNotIn("AB".toLetterBitSet()))
+    }
+
     @Test
     fun `anagrams for A CAT`() {
         assertEquals(
@@ -53,20 +68,6 @@ class AnagramTests {
         )
     }
 
-    @Test fun `letter bit sets`() {
-        assertEquals("".toLetterBitSet(), "".toLetterBitSet())
-        assertEquals(0, "".toLetterBitSet())
-        assertEquals(1, "A".toLetterBitSet())
-        assertEquals(1, "AA".toLetterBitSet())
-        assertEquals(2, "B".toLetterBitSet())
-        assertEquals(3, "BA".toLetterBitSet())
-
-        assertFalse("A".toLetterBitSet().hasLettersNotIn("A".toLetterBitSet()))
-        assertFalse("AA".toLetterBitSet().hasLettersNotIn("A".toLetterBitSet()))
-        assertFalse("A".toLetterBitSet().hasLettersNotIn("AA".toLetterBitSet()))
-        assertTrue("AB".toLetterBitSet().hasLettersNotIn("A".toLetterBitSet()))
-        assertFalse("A".toLetterBitSet().hasLettersNotIn("AB".toLetterBitSet()))
-    }
 
     @Suppress("unused")
     companion object {
