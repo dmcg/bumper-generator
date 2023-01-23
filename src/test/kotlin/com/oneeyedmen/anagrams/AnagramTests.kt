@@ -49,7 +49,11 @@ class AnagramTests {
     fun `anagrams for A CAT`() {
         assertEquals(
             listOf("A ACT", "A CAT", "ACTA"),
-            words.anagramsFor("A CAT", 3)
+            words.anagramsFor("A CAT")
+        )
+        assertEquals(
+            listOf("A ACT", "A CAT", "ACTA"),
+            words.anagramsFor("a cat")
         )
     }
 

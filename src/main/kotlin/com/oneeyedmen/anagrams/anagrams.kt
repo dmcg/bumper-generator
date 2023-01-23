@@ -3,7 +3,7 @@ package com.oneeyedmen.anagrams
 fun List<String>.anagramsFor(input: String, depth: Int = Int.MAX_VALUE): List<String> {
     val result = mutableListOf<String>()
     process(
-        input = WordInfo(input.replace(" ", "")),
+        input = WordInfo(input.uppercase().replace(" ", "")),
         words = this.map { word -> WordInfo(word) },
         collector = { result.add(it) },
         depth = depth
