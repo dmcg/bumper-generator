@@ -47,14 +47,9 @@ class AnagramTests {
 
     @Test
     fun `anagrams for A CAT`() {
-        assertEquals(
-            listOf("A ACT", "A CAT", "ACTA"),
-            words.anagramsFor("A CAT")
-        )
-        assertEquals(
-            listOf("A ACT", "A CAT", "ACTA"),
-            words.anagramsFor("a cat")
-        )
+        val expected = listOf("ACTA", "ACT A", "CAT A")
+        assertEquals(expected, words.anagramsFor("A CAT"))
+        assertEquals(expected, words.anagramsFor("a cat"))
     }
 
     @Test
