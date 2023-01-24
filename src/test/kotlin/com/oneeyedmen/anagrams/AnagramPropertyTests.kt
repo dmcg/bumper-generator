@@ -62,6 +62,13 @@ class AnagramPropertyTests {
         )
     }
 
+    @ParameterizedTest(name = "{index} {0}")
+    @MethodSource("inputs")
+    fun `anagrams are unique`(input: String, anagrams: List<String>) {
+        val normalizedAnagrams = anagrams.map { it.split(' ').sorted().joinToString(" ") }
+        assertEquals(normalizedAnagrams.toSet().size, normalizedAnagrams.size)
+    }
+
     fun inputs() = inputs
 
     private val pathologicals = listOf("a", "")
