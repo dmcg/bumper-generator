@@ -1,61 +1,79 @@
 package com.oneeyedmen.anagrams
 
+import org.junit.jupiter.api.MethodOrderer
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestMethodOrder
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty
 import kotlin.math.sqrt
 import kotlin.system.measureTimeMillis
 
 @EnabledIfSystemProperty(named = "run-slow-tests", matches = "true")
+@TestMethodOrder(MethodOrderer.MethodName::class)
 class AnagramSpeedTests {
 
     @Test
+    fun `anagrams for A WARMUP TEST`() {
+        measureAndPrint("A WARMUP TEST", 10)
+    }
+
+    @Test
+    fun `anagrams for REFACTORING`() {
+        measureAndPrint("REFACTORING", 5)
+    }
+
+    @Test
+    fun `anagrams for REFACTORING T`() {
+        measureAndPrint("REFACTORING T", 5)
+    }
+
+    @Test
     fun `anagrams for REFACTORING TO`() {
-        val input = "REFACTORING TO"
-        val repetitions = 5
-        val meanAndDeviation = (1..repetitions).map {
-            measureTimeMillis {
-                words.anagramsFor(input)
-            }.toDouble()
-        }.culledMeanAndDeviation()
-        println("Duration ${meanAndDeviation.first.toLong()} ± ${meanAndDeviation.second.toLong()}")
+        measureAndPrint("REFACTORING TO", 5)
     }
 
     @Test
     fun `anagrams for REFACTORING TO K`() {
-        val input = "REFACTORING TO K"
-        val repetitions = 5
-        val meanAndDeviation = (1..repetitions).map {
-            measureTimeMillis {
-                words.anagramsFor(input)
-            }.toDouble()
-        }.culledMeanAndDeviation()
-        println("Duration ${meanAndDeviation.first.toLong()} ± ${meanAndDeviation.second.toLong()}")
+        measureAndPrint("REFACTORING TO K", 5)
     }
 
     @Test
     fun `anagrams for REFACTORING TO KO`() {
-        val input = "REFACTORING TO KO"
-        val repetitions = 5
-        val meanAndDeviation = (1..repetitions).map {
-            measureTimeMillis {
-                words.anagramsFor(input)
-            }.toDouble()
-        }.culledMeanAndDeviation()
-        println("Duration ${meanAndDeviation.first.toLong()} ± ${meanAndDeviation.second.toLong()}")
+        measureAndPrint("REFACTORING TO KO", 2)
     }
 
     @Test
     fun `anagrams for REFACTORING TO KOT`() {
-        val input = "REFACTORING TO KOT"
-        val repetitions = 5
-        val meanAndDeviation = (1..repetitions).map {
-            measureTimeMillis {
-                words.anagramsFor(input)
-            }.toDouble()
-        }.culledMeanAndDeviation()
-        println("Duration ${meanAndDeviation.first.toLong()} ± ${meanAndDeviation.second.toLong()}")
+        measureAndPrint("REFACTORING TO KOT", 1)
     }
 
+    @Test
+    fun `anagrams for REFACTORING TO KOTL`() {
+        measureAndPrint("REFACTORING TO KOTL", 1)
+    }
+
+    @Test
+    fun `anagrams for REFACTORING TO KOTLI`() {
+        measureAndPrint("REFACTORING TO KOTLI", 1)
+    }
+
+    @Test
+    fun `anagrams for REFACTORING TO KOTLIN`() {
+        measureAndPrint("REFACTORING TO KOTLIN", 1)
+    }
+
+    private fun measureAndPrint(input: String, repetitions: Int) {
+        val resultsAndTimes = (1..repetitions).map {
+            val results: List<String>
+            val time = measureTimeMillis {
+                results = words.anagramsFor(input)
+            }.toDouble()
+            results to time
+        }
+        val inputLength = input.replace(" ", "").length
+        val resultsSize = resultsAndTimes.first().first.size
+        val meanAndDeviation = resultsAndTimes.map { it.second }.culledMeanAndDeviation()
+        println("$input: $inputLength letters gives $resultsSize results in ${meanAndDeviation.first.toLong()} ± ${meanAndDeviation.second.toLong()} ms")
+    }
 }
 
 private fun List<Double>.culledMeanAndDeviation(): Pair<Double, Double> = when {
