@@ -41,11 +41,11 @@ class AnagramPropertyTests {
     @ParameterizedTest(name = "{index} {0}")
     @MethodSource("inputs")
     fun `input and anagrams have the same letters`(input: String, anagrams: List<String>) {
-        val inputLetters = input.withoutSpaces().uppercase().toCharArray().sorted()
+        val inputLetters = input.lettersInAlphabeticalOrder()
         anagrams.forEach { anagram ->
             assertEquals(
                 inputLetters,
-                anagram.withoutSpaces().toCharArray().sorted(),
+                anagram.lettersInAlphabeticalOrder(),
                 "$anagram does not have the right letters"
             )
         }
@@ -55,24 +55,24 @@ class AnagramPropertyTests {
     @MethodSource("inputs")
     fun `one anagram contains input words`(input: String, anagrams: List<String>) {
         assumeTrue(input.isNotBlank())
-        val inputSorted = input.uppercase().split(' ').sorted()
+        val inputSorted = input.uppercase().wordsInAlphabeticalOrder()
         assertEquals(
             1,
-            anagrams.filter { it.split(' ').sorted() == inputSorted }.size
+            anagrams.filter { it.wordsInAlphabeticalOrder() == inputSorted }.size
         )
     }
 
     @ParameterizedTest(name = "{index} {0}")
     @MethodSource("inputs")
     fun `anagrams are unique`(input: String, anagrams: List<String>) {
-        val normalizedAnagrams = anagrams.map { it.split(' ').sorted().joinToString(" ") }
+        val normalizedAnagrams = anagrams.map { it.wordsInAlphabeticalOrder().joinToString(" ") }
         assertEquals(normalizedAnagrams.toSet().size, normalizedAnagrams.size)
     }
 
     fun inputs() = inputs
 
     private val pathologicals = listOf("a", "")
-    private val upTothreeLetterWords = words.filter { it.length < 4 }
+    private val upToThreeLetterWords = words.filter { it.length < 4 }
     private val shortWords = words.filter { it.length < 6 }
     private val randomShortWords = (1..30).map { shortWords.random() }
     private val randomWordPairs = (1..30).map {
@@ -80,9 +80,9 @@ class AnagramPropertyTests {
                 shortWords.random()
     }
     private val randomWordTriples = (1..30).map {
-        upTothreeLetterWords.random() + " " +
+        upToThreeLetterWords.random() + " " +
                 shortWords.random() + " " +
-                upTothreeLetterWords.random()
+                upToThreeLetterWords.random()
     }
     private val inputs = (pathologicals + randomShortWords + randomWordPairs + randomWordTriples).map {
         arguments(it, words.anagramsFor(it))
@@ -90,3 +90,6 @@ class AnagramPropertyTests {
 }
 
 private fun String.withoutSpaces() = this.replace(" ", "")
+private fun String.wordsInAlphabeticalOrder() = split(' ').sorted()
+private fun String.lettersInAlphabeticalOrder() = withoutSpaces().uppercase().toCharArray().sorted()
+
