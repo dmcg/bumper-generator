@@ -1,12 +1,23 @@
 package com.oneeyedmen.anagrams
 
-fun List<String>.anagramsFor(input: String, depth: Int = Int.MAX_VALUE): List<String> {
+fun List<String>.anagramsFor(
+    input: String,
+    depth: Int = Int.MAX_VALUE,
+): List<String>  = this.anagramsFor(input, depth, instrumentation = {})
+
+internal fun List<String>.anagramsFor(
+    input: String,
+    depth: Int = Int.MAX_VALUE,
+    instrumentation: (MinusLettersInInvocation) -> Unit
+): List<String> {
+    val inputLongWordsFirst = this.sortedByDescending { it.length }
     val result = mutableListOf<String>()
     process(
         input = WordInfo(input.uppercase().replace(" ", "")),
-        words = this.map { word -> WordInfo(word) },
+        words = inputLongWordsFirst.map { word -> WordInfo(word) },
         collector = { result.add(it) },
-        depth = depth
+        depth = depth,
+        instrumentation = instrumentation
     )
     return result
 }
@@ -16,13 +27,15 @@ private fun process(
     words: List<WordInfo>,
     collector: (String) -> Unit,
     prefix: String = "",
-    depth: Int
+    depth: Int,
+    instrumentation: (MinusLettersInInvocation) -> Unit = {}
 ) {
     val candidateWords = words.filter { wordInfo ->
         wordInfo.couldBeMadeFromTheLettersIn(input)
     }
     var remainingCandidateWords = candidateWords
     candidateWords.forEach { wordInfo ->
+        instrumentation(MinusLettersInInvocation(input, wordInfo))
         val remainingLetters = input.minusLettersIn(wordInfo)
         when {
             remainingLetters.isEmpty() ->
@@ -30,8 +43,10 @@ private fun process(
             depth > 1 -> process(
                 input = WordInfo(remainingLetters),
                 words = remainingCandidateWords,
-                collector = collector, prefix = "$prefix ${wordInfo.word}",
-                depth = depth - 1
+                collector = collector,
+                prefix = "$prefix ${wordInfo.word}",
+                depth = depth - 1,
+                instrumentation = instrumentation
             )
         }
         remainingCandidateWords = remainingCandidateWords.subList(
@@ -40,7 +55,11 @@ private fun process(
     }
 }
 
-private class WordInfo(
+internal data class MinusLettersInInvocation(
+    val receiver: WordInfo, val parameter: WordInfo
+)
+
+internal class WordInfo(
     val word: String,
     val letterBitSet: Int
 ) {
