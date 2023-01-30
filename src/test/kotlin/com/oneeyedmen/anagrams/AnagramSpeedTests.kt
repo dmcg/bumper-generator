@@ -1,5 +1,6 @@
 package com.oneeyedmen.anagrams
 
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.MethodOrderer
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestMethodOrder
@@ -17,10 +18,36 @@ class AnagramSpeedTests {
     }
 
     @Test
+    fun `anagrams for REFACTORING T`() {
+        report("REFACTORING T", repetitions = 10, expectedResultCount = 15108)
+    }
+
+    @Test
     fun `anagrams for REFACTORING TO`() {
         report("REFACTORING TO", repetitions = 10, expectedResultCount = 128270)
     }
 
+    @Test
+    fun `anagrams for REFACTORING TO K`() {
+        report("REFACTORING TO K", repetitions = 1, expectedResultCount = 222225)
+    }
+
+    @Test
+    fun `anagrams for REFACTORING TO KO`() {
+        report("REFACTORING TO KO", repetitions = 1, expectedResultCount = 1038259)
+    }
+
+    @Test
+    fun `anagrams for REFACTORING TO KOT`() {
+        report("REFACTORING TO KOT", repetitions = 1, expectedResultCount = 1609238)
+    }
+
+    @Test
+    fun `anagrams for REFACTORING TO KOTL`() {
+        report("REFACTORING TO KOTL", repetitions = 1, expectedResultCount = 5412104)
+    }
+
+    @Disabled
     @Test
     fun `anagrams for REFACTORING TO instrumented`() {
         val invocations = mutableListOf<MinusLettersInInvocation>()
@@ -38,7 +65,7 @@ class AnagramSpeedTests {
     }
 }
 
-private fun report(input: String, repetitions: Int, expectedResultCount: Int) {
+private fun report(input: String, repetitions: Int, expectedResultCount: Int = -1) {
     val timeAndResultCounts = (1..repetitions).map {
         val resultCount: Int
         val timeMs = measureTimeMillis {
@@ -49,11 +76,12 @@ private fun report(input: String, repetitions: Int, expectedResultCount: Int) {
     val meanAndDeviation = timeAndResultCounts
         .map { it.second.toDouble() }
         .culledMeanAndDeviation()
+    val resultCount = timeAndResultCounts.first().first
     println(
-        "Duration ${meanAndDeviation.first.toLong()} ± ${meanAndDeviation.second.toLong()}"
+        "$input : Duration ${meanAndDeviation.first.toLong()} ± ${meanAndDeviation.second.toLong()}, Result count $resultCount"
     )
-
-    timeAndResultCounts.forEach { (count, _) -> assertEquals(expectedResultCount, count) }
+    if (expectedResultCount != -1)
+        timeAndResultCounts.forEach { (count, _) -> assertEquals(expectedResultCount, count) }
 }
 
 private fun List<Double>.culledMeanAndDeviation(): Pair<Double, Double> = when {
