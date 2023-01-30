@@ -3,7 +3,7 @@ package com.oneeyedmen.anagrams
 fun List<String>.anagramsFor(
     input: String,
     depth: Int = Int.MAX_VALUE,
-): List<String>  = this.anagramsFor(input, depth, instrumentation = {})
+): List<String> = this.anagramsFor(input, depth, instrumentation = {})
 
 internal fun List<String>.anagramsFor(
     input: String,
@@ -40,6 +40,7 @@ private fun process(
         when {
             remainingLetters.isEmpty() ->
                 collector("$prefix ${wordInfo.word}".substring(1))
+
             depth > 1 -> process(
                 input = WordInfo(remainingLetters),
                 words = remainingCandidateWords,
