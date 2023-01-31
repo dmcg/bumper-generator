@@ -66,7 +66,10 @@ class AnagramPropertyTests {
     @MethodSource("inputs")
     fun `anagrams are unique`(input: String, anagrams: List<String>) {
         val normalizedAnagrams = anagrams.map { it.wordsInAlphabeticalOrder().joinToString(" ") }
-        assertEquals(normalizedAnagrams.toSet().size, normalizedAnagrams.size)
+        assertEquals(
+            normalizedAnagrams.toSet().joinToString("\n"),
+            normalizedAnagrams.joinToString("\n")
+        )
     }
 
     fun inputs() = inputs

@@ -11,11 +11,16 @@ internal fun List<String>.anagramsFor(
     instrumentation: (MinusLettersInInvocation) -> Unit
 ): List<String> {
     val inputLongWordsFirst = this.sortedByDescending { it.length }
+    val groups = inputLongWordsFirst.groupBy { String(it.toCharArray().sortedArray()) }.values.map { WordInfo(it) }
     val result = mutableListOf<String>()
     process(
         input = WordInfo(input.uppercase().replace(" ", "")),
-        words = inputLongWordsFirst.map { word -> WordInfo(word) },
-        collector = { result.add(it) },
+        words = groups,
+        collector = { words ->
+            val temp = mutableListOf<String>()
+            words.permuteInto(temp)
+            result.addAll(temp.map { it.split(" ").sorted().joinToString(" ") }.toSet())
+        },
         depth = depth,
         instrumentation = instrumentation
     )
@@ -25,8 +30,8 @@ internal fun List<String>.anagramsFor(
 private fun process(
     input: WordInfo,
     words: List<WordInfo>,
-    collector: (String) -> Unit,
-    prefix: String = "",
+    collector: (List<WordInfo>) -> Unit,
+    prefix: List<WordInfo> = emptyList(),
     depth: Int,
     instrumentation: (MinusLettersInInvocation) -> Unit = {}
 ) {
@@ -39,13 +44,13 @@ private fun process(
         val remainingLetters = input.minusLettersIn(wordInfo)
         when {
             remainingLetters.isEmpty() ->
-                collector("$prefix ${wordInfo.word}".substring(1))
+                collector(prefix + wordInfo)
 
             depth > 1 -> process(
                 input = WordInfo(remainingLetters),
                 words = remainingCandidateWords,
                 collector = collector,
-                prefix = "$prefix ${wordInfo.word}",
+                prefix = prefix + wordInfo,
                 depth = depth - 1,
                 instrumentation = instrumentation
             )
@@ -61,10 +66,13 @@ internal data class MinusLettersInInvocation(
 )
 
 internal class WordInfo(
-    val word: String,
+    val words: List<String>,
     val letterBitSet: Int
 ) {
-    constructor(word: String) : this(word, word.toLetterBitSet())
+    val word: String = words.first()
+
+    constructor(word: String) : this(listOf(word), word.toLetterBitSet())
+    constructor(words: List<String>) : this(words, words.first().toLetterBitSet())
 
     fun couldBeMadeFromTheLettersIn(input: WordInfo) =
         !letterBitSet.hasLettersNotIn(input.letterBitSet) &&
@@ -112,4 +120,20 @@ private fun String.minusLettersIn(word: String): String {
             result[index++] = char
     }
     return String(result)
+}
+
+internal fun List<WordInfo>.permuteInto(
+    collector: MutableList<String>,
+    prefix: String = ""
+) {
+    when (this.size) {
+        0 -> Unit
+        1 -> this.first().words.forEach { word ->
+            collector.add("$prefix $word".substring(1))
+        }
+
+        else -> this.first().words.forEach { word ->
+            this.subList(1, this.size).permuteInto(collector, prefix = "$prefix $word")
+        }
+    }
 }
