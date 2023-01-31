@@ -10,17 +10,16 @@ internal fun List<String>.anagramsFor(
     depth: Int = Int.MAX_VALUE,
     instrumentation: (MinusLettersInInvocation) -> Unit
 ): List<String> {
-    val inputLongWordsFirst = this.sortedByDescending { it.length }
-    val groups = inputLongWordsFirst.groupBy { String(it.toCharArray().sortedArray()) }.values.map { WordInfo(it) }
+    val groups = this
+        .sortedByDescending { it.length }
+        .groupBy { String(it.toCharArray().sortedArray()) }
+        .values
+        .map { WordInfo(it) }
     val result = mutableListOf<String>()
     process(
         input = WordInfo(input.uppercase().replace(" ", "")),
         words = groups,
-        collector = { words ->
-            val temp = mutableListOf<String>()
-            words.permuteInto(temp)
-            result.addAll(temp.map { it.split(" ").sorted().joinToString(" ") }.toSet())
-        },
+        collector = { wordInfos -> result.addAll(wordInfos.combinations()) },
         depth = depth,
         instrumentation = instrumentation
     )
@@ -122,16 +121,21 @@ private fun String.minusLettersIn(word: String): String {
     return String(result)
 }
 
+
+private fun List<WordInfo>.combinations(): Set<String> =
+    mutableListOf<String>().apply { permuteInto(this) }
+        .map { it.split(" ").sorted().joinToString(" ") }
+        .toSet()
+
 internal fun List<WordInfo>.permuteInto(
     collector: MutableList<String>,
     prefix: String = ""
 ) {
     when (this.size) {
-        0 -> Unit
+        0 -> {}
         1 -> this.first().words.forEach { word ->
             collector.add("$prefix $word".substring(1))
         }
-
         else -> this.first().words.forEach { word ->
             this.subList(1, this.size).permuteInto(collector, prefix = "$prefix $word")
         }
