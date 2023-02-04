@@ -44,30 +44,30 @@ class AnagramImplementationTests {
         )
     }
 
-//    @Test fun `single WordInfo permutations`() {
-//        assertEquals(
-//            listOf("ACT", "CAT"),
-//            listOf(WordInfo(listOf("ACT", "CAT"))).permutations()
-//        )
-//    }
-//
-//    @Test fun `WordInfo permutations`() {
-//        assertEquals(
-//            listOf("ACT TAB", "ACT BAT", "CAT TAB", "CAT BAT"),
-//            listOf(
-//                WordInfo(listOf("ACT", "CAT")),
-//                WordInfo(listOf("TAB", "BAT"))
-//            ).permutations()
-//        )
-//        assertEquals(
-//            listOf("ACT A TAB", "ACT A BAT", "CAT A TAB", "CAT A BAT"),
-//            listOf(
-//                WordInfo(listOf("ACT", "CAT")),
-//                WordInfo(listOf("A")),
-//                WordInfo(listOf("TAB", "BAT"))
-//            ).permutations()
-//        )
-//    }
+    @Test fun `single WordInfo permutations`() {
+        assertEquals(
+            listOf("ACT", "CAT"),
+            listOf(WordInfo(listOf("ACT", "CAT"))).permutations()
+        )
+    }
+
+    @Test fun `WordInfo permutations`() {
+        assertEquals(
+            listOf("ACT TAB", "ACT BAT", "CAT TAB", "CAT BAT"),
+            listOf(
+                WordInfo(listOf("ACT", "CAT")),
+                WordInfo(listOf("TAB", "BAT"))
+            ).permutations()
+        )
+        assertEquals(
+            listOf("ACT A TAB", "ACT A BAT", "CAT A TAB", "CAT A BAT"),
+            listOf(
+                WordInfo(listOf("ACT", "CAT")),
+                WordInfo(listOf("A")),
+                WordInfo(listOf("TAB", "BAT"))
+            ).permutations()
+        )
+    }
 }
 
 private fun List<WordInfo>.permutations(): List<String> {

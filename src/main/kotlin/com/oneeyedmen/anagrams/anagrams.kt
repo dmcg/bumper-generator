@@ -3,8 +3,9 @@ package com.oneeyedmen.anagrams
 class Anagrams(words: List<String>) {
 
     private val wordInfos = words.sortedByDescending { it.length }
-        .groupBy { it.withSortedCharacters() }
-        .map { entry -> WordInfo(entry.key, entry.value) }
+        .groupBy { String(it.toCharArray().sortedArray()) }
+        .values
+        .map { WordInfo(it) }
 
     fun anagramsFor(
         input: String,
@@ -24,73 +25,54 @@ class Anagrams(words: List<String>) {
             instrumentation = instrumentation
         )
     }
-
-    private fun process(
-        input: WordInfo,
-        words: List<WordInfo>,
-        collector: (List<WordInfo>) -> Unit,
-        prefix: List<WordInfo> = emptyList(),
-        depth: Int,
-        instrumentation: (MinusLettersInInvocation) -> Unit = {}
-    ) {
-        val candidateWords = words.filter { wordInfo ->
-            wordInfo.couldBeMadeFromTheLettersIn(input)
-        }
-        var remainingCandidateWords = candidateWords
-        candidateWords.forEach { wordInfo ->
-            val minusLettersInInvocation = MinusLettersInInvocation(input, wordInfo)
-
-
-            val remainingLetters: String =
-                cache.computeIfAbsent(minusLettersInInvocation) {
-                    instrumentation(minusLettersInInvocation)
-                    input.minusLettersIn(wordInfo)
-                }
-            when {
-                remainingLetters.isEmpty() ->
-                    collector(prefix + wordInfo)
-
-                depth > 1 -> process(
-                    input = WordInfo(remainingLetters.withSortedCharacters()),
-                    words = remainingCandidateWords,
-                    collector = collector,
-                    prefix = prefix + wordInfo,
-                    depth = depth - 1,
-                    instrumentation = instrumentation
-                )
-            }
-            remainingCandidateWords = remainingCandidateWords.subList(
-                1, remainingCandidateWords.size
-            )
-        }
-    }
-
-    private val cache = mutableMapOf<MinusLettersInInvocation, String>()
 }
 
+private fun process(
+    input: WordInfo,
+    words: List<WordInfo>,
+    collector: (List<WordInfo>) -> Unit,
+    prefix: List<WordInfo> = emptyList(),
+    depth: Int,
+    instrumentation: (MinusLettersInInvocation) -> Unit = {}
+) {
+    val candidateWords = words.filter { wordInfo ->
+        wordInfo.couldBeMadeFromTheLettersIn(input)
+    }
+    var remainingCandidateWords = candidateWords
+    candidateWords.forEach { wordInfo ->
+        instrumentation(MinusLettersInInvocation(input, wordInfo))
+        val remainingLetters = input.minusLettersIn(wordInfo)
+        when {
+            remainingLetters.isEmpty() ->
+                collector(prefix + wordInfo)
+
+            depth > 1 -> process(
+                input = WordInfo(remainingLetters),
+                words = remainingCandidateWords,
+                collector = collector,
+                prefix = prefix + wordInfo,
+                depth = depth - 1,
+                instrumentation = instrumentation
+            )
+        }
+        remainingCandidateWords = remainingCandidateWords.subList(
+            1, remainingCandidateWords.size
+        )
+    }
+}
 
 internal data class MinusLettersInInvocation(
     val receiver: WordInfo, val parameter: WordInfo
 )
 
 internal class WordInfo(
-    val alphabeticLetters: String,
     val words: List<String>,
     val letterBitSet: Int
 ) {
     val word: String = words.first()
 
-    constructor(alphabeticLetters: String) : this(
-        alphabeticLetters,
-        listOf(alphabeticLetters),
-        alphabeticLetters.toLetterBitSet()
-    )
-
-    constructor(alphabeticLetters: String, words: List<String>) : this(
-        alphabeticLetters,
-        words,
-        alphabeticLetters.toLetterBitSet()
-    )
+    constructor(word: String) : this(listOf(word), word.toLetterBitSet())
+    constructor(words: List<String>) : this(words, words.first().toLetterBitSet())
 
     fun couldBeMadeFromTheLettersIn(input: WordInfo) =
         !letterBitSet.hasLettersNotIn(input.letterBitSet) &&
@@ -98,23 +80,6 @@ internal class WordInfo(
 
     fun minusLettersIn(other: WordInfo): String =
         this.word.minusLettersIn(other.word)
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as WordInfo
-
-        if (alphabeticLetters != other.alphabeticLetters) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        return alphabeticLetters.hashCode()
-    }
-
-
 }
 
 internal fun Int.hasLettersNotIn(other: Int) = (this and other) != this
@@ -157,7 +122,6 @@ private fun String.minusLettersIn(word: String): String {
     return String(result)
 }
 
-private fun String.withSortedCharacters() = String(toCharArray().sortedArray())
 
 private fun List<WordInfo>.combinations(): Set<String> =
     mutableListOf<String>().apply { permuteInto(this) }
@@ -173,7 +137,6 @@ internal fun List<WordInfo>.permuteInto(
         1 -> this.first().words.forEach { word ->
             collector.add("$prefix $word".substring(1))
         }
-
         else -> this.first().words.forEach { word ->
             this.subList(1, this.size).permuteInto(collector, prefix = "$prefix $word")
         }
