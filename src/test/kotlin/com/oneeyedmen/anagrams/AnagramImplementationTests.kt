@@ -37,21 +37,21 @@ class AnagramImplementationTests {
         assertFalse("A".toLetterBitSet().hasLettersNotIn("AB".toLetterBitSet()))
     }
 
-    @Test fun `empty WordInfo permutations`() {
+    @Test fun `empty WordInfo combinations`() {
         assertEquals(
             emptySet(),
             emptyList<WordInfo>().combinations()
         )
     }
 
-    @Test fun `single WordInfo permutations`() {
+    @Test fun `single WordInfo combinations`() {
         assertEquals(
             setOf("ACT", "CAT"),
             listOf(WordInfo(listOf("ACT", "CAT"))).combinations()
         )
     }
 
-    @Test fun `WordInfo permutations`() {
+    @Test fun `WordInfo combinations`() {
         assertEquals(
             setOf("ACT TAB", "ACT BAT", "CAT TAB", "BAT CAT"),
             listOf(
@@ -65,6 +65,14 @@ class AnagramImplementationTests {
                 WordInfo(listOf("ACT", "CAT")),
                 WordInfo(listOf("A")),
                 WordInfo(listOf("TAB", "BAT"))
+            ).combinations()
+        )
+        assertEquals(
+            setOf("A ACT ACT", "A ACT CAT", "A CAT CAT"),
+            listOf(
+                WordInfo(listOf("ACT", "CAT")),
+                WordInfo(listOf("A")),
+                WordInfo(listOf("ACT", "CAT"))
             ).combinations()
         )
     }
