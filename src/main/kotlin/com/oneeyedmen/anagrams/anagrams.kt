@@ -19,7 +19,7 @@ class AnagramGenerator(words: List<String>) {
     ): List<String> {
         val result = mutableListOf<String>()
         process(
-            input = WordInfo(input.uppercase().replace(" ", "")),
+            input = Letters(input.uppercase().replace(" ", "")),
             words = wordInfos,
             collector = { wordInfos -> result.addAll(wordInfos.combinations()) },
             depth = depth,
@@ -30,7 +30,7 @@ class AnagramGenerator(words: List<String>) {
 }
 
 private fun process(
-    input: WordInfo,
+    input: Letters,
     words: List<WordInfo>,
     collector: (List<WordInfo>) -> Unit,
     prefix: MutableList<WordInfo> = mutableListOf(),
@@ -50,7 +50,7 @@ private fun process(
                 collector(prefix)
 
             depth > 1 -> process(
-                input = WordInfo(remainingLetters),
+                input = remainingLetters,
                 words = remainingCandidateWords,
                 collector = collector,
                 prefix = prefix,
@@ -66,7 +66,7 @@ private fun process(
 }
 
 internal data class MinusLettersInInvocation(
-    val receiver: WordInfo, val parameter: WordInfo
+    val receiver: Letters, val parameter: WordInfo
 )
 
 internal class WordInfo(
@@ -78,12 +78,27 @@ internal class WordInfo(
     constructor(word: String) : this(listOf(word), word.toLetterBitSet())
     constructor(words: List<String>) : this(words, words.first().toLetterBitSet())
 
-    fun couldBeMadeFromTheLettersIn(input: WordInfo) =
+    fun couldBeMadeFromTheLettersIn(input: Letters) =
         !letterBitSet.hasLettersNotIn(input.letterBitSet) &&
-                this.word.couldBeMadeFromTheLettersIn(input.word)
+                this.word.couldBeMadeFromTheLettersIn(input)
+}
 
-    fun minusLettersIn(other: WordInfo): String =
-        this.word.minusLettersIn(other.word)
+internal class Letters(
+    val length: Int,
+    val letterBitSet: Int,
+    val letterCounts: IntArray,
+) {
+    constructor(word: String) : this(
+        word.length,
+        word.toLetterBitSet(),
+        IntArray(26).also { word.forEach { ch -> it[ch - 'A']++ } }
+    )
+
+    fun isEmpty(): Boolean =
+        length == 0
+
+    fun minusLettersIn(other: WordInfo): Letters =
+        this.minusLettersIn(other.word)
 }
 
 internal fun Int.hasLettersNotIn(other: Int) = (this and other) != this
@@ -97,33 +112,36 @@ internal fun String.toLetterBitSet(): Int {
 }
 
 internal fun String.couldBeMadeFromTheLettersIn(letters: String): Boolean {
+    return couldBeMadeFromTheLettersIn(Letters(letters.replace(" ", "")))
+}
+
+private fun String.couldBeMadeFromTheLettersIn(letters: Letters): Boolean {
     if (this.length > letters.length)
         return false
-    val remainingLetters = letters.toCharArray()
+    val remainingLetterCounts = letters.letterCounts.copyOf()
     this.forEach { char ->
-        val index = remainingLetters.indexOf(char)
-        if (index == -1)
+        val newCount = --remainingLetterCounts[char - 'A']
+        if (newCount < 0)
             return false
-        remainingLetters[index] = '*'
     }
     return true
 }
 
-private fun String.minusLettersIn(word: String): String {
-    val remainingLetters = this.toCharArray()
+private fun Letters.minusLettersIn(word: String): Letters {
+    val remainingLetterCounts = this.letterCounts.copyOf()
+    var remainingLetterBitSet = this.letterBitSet
     word.forEach { char ->
-        val index = remainingLetters.indexOf(char)
-        if (index == -1)
+        val cnt = --remainingLetterCounts[char - 'A']
+        if (cnt < 0)
             error("BAD")
-        remainingLetters[index] = '*'
+        if (cnt == 0)
+            remainingLetterBitSet = remainingLetterBitSet and (1 shl char - 'A').inv()
     }
-    val result = CharArray(this.length - word.length)
-    var index = 0
-    remainingLetters.forEach { char ->
-        if (char != '*')
-            result[index++] = char
-    }
-    return String(result)
+    return Letters(
+        this.length - word.length,
+        remainingLetterBitSet,
+        remainingLetterCounts
+    )
 }
 
 internal fun List<WordInfo>.combinations(): Set<String> = when {

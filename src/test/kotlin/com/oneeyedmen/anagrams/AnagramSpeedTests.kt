@@ -56,7 +56,7 @@ class AnagramSpeedTests {
             instrumentation = { invocations.add(it) },
         )
         val invocationCounts: Map<Pair<Int, Int>, Int> = invocations.map { invocation ->
-            invocation.receiver.word.length to invocation.parameter.word.length
+            invocation.receiver.length to invocation.parameter.word.length
         }.groupingBy { it }.eachCount()
         println("Receiver Size, Parameter Size, Invocation Count")
         invocationCounts.forEach { (entry, count) ->
