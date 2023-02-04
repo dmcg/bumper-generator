@@ -45,11 +45,11 @@ private fun process(
         instrumentation(MinusLettersInInvocation(input, wordInfo))
         val remainingLetters = input.minusLettersIn(wordInfo)
         when {
-            remainingLetters.isEmpty() ->
+            remainingLetters.word.isEmpty() ->
                 collector(prefix + wordInfo)
 
             depth > 1 -> process(
-                input = WordInfo(remainingLetters),
+                input = remainingLetters,
                 words = remainingCandidateWords,
                 collector = collector,
                 prefix = prefix + wordInfo,
@@ -69,19 +69,36 @@ internal data class MinusLettersInInvocation(
 
 internal class WordInfo(
     val words: List<String>,
-    val letterBitSet: Int
+    val letterBitSet: Int,
+    val letterFrequencies: IntArray
 ) {
     val word: String = words.first()
 
-    constructor(word: String) : this(listOf(word), word.toLetterBitSet())
-    constructor(words: List<String>) : this(words, words.first().toLetterBitSet())
+    constructor(word: String) : this(listOf(word), word.toLetterBitSet(), word.toLetterFrequencies())
+    constructor(words: List<String>) : this(words, words.first().toLetterBitSet(), words.first().toLetterFrequencies())
 
     fun couldBeMadeFromTheLettersIn(input: WordInfo) =
         !letterBitSet.hasLettersNotIn(input.letterBitSet) &&
-                this.word.couldBeMadeFromTheLettersIn(input.word)
+                if (this.word.length > input.word.length)
+                    false
+                else
+                    this.letterFrequencies.couldBeMadeFromTheLettersIn(input.letterFrequencies)
 
-    fun minusLettersIn(other: WordInfo): String =
-        this.word.minusLettersIn(other.word)
+    fun minusLettersIn(other: WordInfo): WordInfo {
+        val resultLetterFrequencies = this.letterFrequencies.copyOf()
+        var resultLetterBitSet = 0
+        val result = StringBuilder()
+        for (index in resultLetterFrequencies.indices) {
+            resultLetterFrequencies[index] -= other.letterFrequencies[index]
+            resultLetterBitSet = resultLetterBitSet or (1 shl index)
+            val char = 'A' + index
+            for (i in 0 until resultLetterFrequencies[index]) {
+                result.append(char)
+            }
+        }
+        val resultAsString = result.toString()
+        return WordInfo(listOf(resultAsString), resultLetterBitSet, resultLetterFrequencies)
+    }
 }
 
 internal fun Int.hasLettersNotIn(other: Int) = (this and other) != this
@@ -102,29 +119,17 @@ internal fun String.toLetterFrequencies(): IntArray {
     return result
 }
 
-internal fun String.couldBeMadeFromTheLettersIn(letters: String): Boolean {
-    if (this.length > letters.length)
-        return false
-    val thisLetterFrequencies = this.toLetterFrequencies()
-    val thatLetterFrequencies = letters.toLetterFrequencies()
-    thisLetterFrequencies.forEachIndexed { index, frequency ->
+internal fun String.couldBeMadeFromTheLettersIn(letters: String) = when {
+    this.length > letters.length -> false
+    else -> toLetterFrequencies().couldBeMadeFromTheLettersIn(letters.toLetterFrequencies())
+}
+
+private fun IntArray.couldBeMadeFromTheLettersIn(thatLetterFrequencies: IntArray): Boolean {
+    forEachIndexed { index, frequency ->
         if (frequency > thatLetterFrequencies[index])
             return false
     }
     return true
-}
-
-private fun String.minusLettersIn(word: String): String {
-    val thisLetterFrequencies = this.toLetterFrequencies()
-    val thatLetterFrequencies = word.toLetterFrequencies()
-    val result = StringBuilder()
-    thisLetterFrequencies.indices.forEach { index ->
-        thisLetterFrequencies[index] -= thatLetterFrequencies[index]
-        repeat(thisLetterFrequencies[index]) {
-            result.append('A' + index)
-        }
-    }
-    return result.toString()
 }
 
 
