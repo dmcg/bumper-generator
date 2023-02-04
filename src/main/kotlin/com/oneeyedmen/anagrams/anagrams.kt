@@ -1,11 +1,11 @@
 package com.oneeyedmen.anagrams
 
-class Anagrams(words: List<String>) {
+fun anagrams(words: List<String>) = Anagrams(words.sortedByDescending { it.length }
+    .groupBy { String(it.toCharArray().sortedArray()) }
+    .values
+    .map { WordInfo(it) })
 
-    private val wordInfos = words.sortedByDescending { it.length }
-        .groupBy { String(it.toCharArray().sortedArray()) }
-        .values
-        .map { WordInfo(it) }
+class Anagrams internal constructor(internal val wordInfos: List<WordInfo>) {
 
     fun anagramsFor(
         input: String,

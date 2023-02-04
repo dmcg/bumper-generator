@@ -9,7 +9,13 @@ import java.io.File
 import kotlin.test.assertEquals
 
 val words: List<String> = File("./words.txt").readLines()
-val anagrams = Anagrams(words)
+private val wordInfos = File("./wordinfos.txt").useLines { lines ->
+    lines.map { line ->
+        val parts = line.split('\t')
+        WordInfo(parts[1].split(" "), parts[0].toInt())
+    }.toList()
+}
+val anagrams = Anagrams(wordInfos)
 
 @Suppress("JUnitMalformedDeclaration")
 class AnagramTests {

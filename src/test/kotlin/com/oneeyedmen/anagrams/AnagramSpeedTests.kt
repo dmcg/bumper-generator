@@ -51,7 +51,7 @@ class AnagramSpeedTests {
     @Test
     fun `anagrams for REFACTORING TO instrumented`() {
         val invocations = mutableListOf<MinusLettersInInvocation>()
-        Anagrams(words).anagramsFor("REFACTORING TO", instrumentation = { invocations.add(it) })
+        anagrams.anagramsFor("REFACTORING TO", instrumentation = { invocations.add(it) })
         val invocationCounts: Map<Pair<Int, Int>, Int> = invocations.map { invocation ->
             invocation.receiver.word.length to invocation.parameter.word.length
         }.groupBy { it }.mapValues { it.value.size }
