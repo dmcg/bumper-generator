@@ -1,5 +1,7 @@
 package com.oneeyedmen.anagrams
 
+import java.lang.StringBuilder
+
 class Anagrams(words: List<String>) {
 
     private val wordInfos = words.sortedByDescending { it.length }
@@ -92,34 +94,37 @@ internal fun String.toLetterBitSet(): Int {
     return result
 }
 
+internal fun String.toLetterFrequencies(): IntArray {
+    val result = IntArray(26)
+    this.forEach { char ->
+        result[char - 'A']++
+    }
+    return result
+}
+
 internal fun String.couldBeMadeFromTheLettersIn(letters: String): Boolean {
     if (this.length > letters.length)
         return false
-    val remainingLetters = letters.toCharArray()
-    this.forEach { char ->
-        val index = remainingLetters.indexOf(char)
-        if (index == -1)
+    val thisLetterFrequencies = this.toLetterFrequencies()
+    val thatLetterFrequencies = letters.toLetterFrequencies()
+    thisLetterFrequencies.forEachIndexed { index, frequency ->
+        if (frequency > thatLetterFrequencies[index])
             return false
-        remainingLetters[index] = '*'
     }
     return true
 }
 
 private fun String.minusLettersIn(word: String): String {
-    val remainingLetters = this.toCharArray()
-    word.forEach { char ->
-        val index = remainingLetters.indexOf(char)
-        if (index == -1)
-            error("BAD")
-        remainingLetters[index] = '*'
+    val thisLetterFrequencies = this.toLetterFrequencies()
+    val thatLetterFrequencies = word.toLetterFrequencies()
+    val result = StringBuilder()
+    thisLetterFrequencies.indices.forEach { index ->
+        thisLetterFrequencies[index] -= thatLetterFrequencies[index]
+        repeat(thisLetterFrequencies[index]) {
+            result.append('A' + index)
+        }
     }
-    val result = CharArray(this.length - word.length)
-    var index = 0
-    remainingLetters.forEach { char ->
-        if (char != '*')
-            result[index++] = char
-    }
-    return String(result)
+    return result.toString()
 }
 
 
