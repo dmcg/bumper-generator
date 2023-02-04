@@ -124,9 +124,9 @@ private fun String.minusLettersIn(word: String): String {
 }
 
 
-internal fun List<WordInfo>.combinations(): Set<String> {
-    if (this.isEmpty()) return emptySet()
-    return mutableSetOf<String>().apply { permuteInto(this) }
+internal fun List<WordInfo>.combinations(): Set<String> = when {
+    this.isEmpty() -> emptySet()
+    else -> mutableSetOf<String>().apply { permuteInto(this) }
 }
 
 private fun List<WordInfo>.permuteInto(
