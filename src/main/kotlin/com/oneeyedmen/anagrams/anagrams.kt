@@ -30,7 +30,7 @@ private fun process(
     input: WordInfo,
     words: List<WordInfo>,
     collector: (List<WordInfo>) -> Unit,
-    prefix: List<WordInfo> = emptyList(),
+    prefix: MutableList<WordInfo> = mutableListOf(),
     depth: Int,
     instrumentation: (MinusLettersInInvocation) -> Unit = {}
 ) {
@@ -41,19 +41,21 @@ private fun process(
     candidateWords.forEach { wordInfo ->
         instrumentation(MinusLettersInInvocation(input, wordInfo))
         val remainingLetters = input.minusLettersIn(wordInfo)
+        prefix.add(wordInfo)
         when {
             remainingLetters.isEmpty() ->
-                collector(prefix + wordInfo)
+                collector(prefix)
 
             depth > 1 -> process(
                 input = WordInfo(remainingLetters),
                 words = remainingCandidateWords,
                 collector = collector,
-                prefix = prefix + wordInfo,
+                prefix = prefix,
                 depth = depth - 1,
                 instrumentation = instrumentation
             )
         }
+        prefix.removeLast()
         remainingCandidateWords = remainingCandidateWords.subList(
             1, remainingCandidateWords.size
         )
