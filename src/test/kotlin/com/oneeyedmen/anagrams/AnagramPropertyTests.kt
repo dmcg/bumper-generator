@@ -88,7 +88,7 @@ class AnagramPropertyTests {
                 upToThreeLetterWords.random()
     }
     private val inputs = (pathologicals + randomShortWords + randomWordPairs + randomWordTriples).map {
-        arguments(it, words.anagramsFor(it))
+        arguments(it, anagrams.anagramsFor(it))
     }
 }
 

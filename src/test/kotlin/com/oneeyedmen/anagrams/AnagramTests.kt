@@ -9,6 +9,7 @@ import java.io.File
 import kotlin.test.assertEquals
 
 val words: List<String> = File("./words.txt").readLines()
+val anagrams = Anagrams(words)
 
 @Suppress("JUnitMalformedDeclaration")
 class AnagramTests {
@@ -18,18 +19,18 @@ class AnagramTests {
         val expected = listOf("ACTA", "A ACT", "A CAT")
         assertEquals(
             expected,
-            words.anagramsFor("A CAT")
+            anagrams.anagramsFor("A CAT")
         )
         assertEquals(
             expected,
-            words.anagramsFor("a cat")
+            anagrams.anagramsFor("a cat")
         )
     }
 
     @Test
     fun `anagrams for REFACTORING TO`(approver: Approver) {
         approver.assertApproved(
-            words.anagramsFor("REFACTORING TO").joinToString("\n")
+            anagrams.anagramsFor("REFACTORING TO").joinToString("\n")
         )
     }
 
@@ -37,7 +38,7 @@ class AnagramTests {
     @EnabledIfSystemProperty(named = "run-slow-tests", matches = "true")
     fun `anagrams for REFACTORING TO KOTLIN depth 3`(approver: Approver) {
         approver.assertApproved(
-            words.anagramsFor("REFACTORING TO KOTLIN", depth = 3).joinToString("\n")
+            anagrams.anagramsFor("REFACTORING TO KOTLIN", depth = 3).joinToString("\n")
         )
     }
 

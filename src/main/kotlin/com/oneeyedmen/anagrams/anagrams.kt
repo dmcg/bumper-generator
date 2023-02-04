@@ -1,29 +1,30 @@
 package com.oneeyedmen.anagrams
 
-fun List<String>.anagramsFor(
-    input: String,
-    depth: Int = Int.MAX_VALUE,
-): List<String> = this.anagramsFor(input, depth, instrumentation = {})
+class Anagrams(words: List<String>) {
 
-internal fun List<String>.anagramsFor(
-    input: String,
-    depth: Int = Int.MAX_VALUE,
-    instrumentation: (MinusLettersInInvocation) -> Unit
-): List<String> {
-    val groups = this
-        .sortedByDescending { it.length }
+    private val wordInfos = words.sortedByDescending { it.length }
         .groupBy { String(it.toCharArray().sortedArray()) }
         .values
         .map { WordInfo(it) }
-    val result = mutableListOf<String>()
-    process(
-        input = WordInfo(input.uppercase().replace(" ", "")),
-        words = groups,
-        collector = { wordInfos -> result.addAll(wordInfos.combinations()) },
-        depth = depth,
-        instrumentation = instrumentation
-    )
-    return result
+
+    fun anagramsFor(
+        input: String,
+        depth: Int = Int.MAX_VALUE,
+    ): List<String> = anagramsFor(input, depth, instrumentation = {})
+
+    internal fun anagramsFor(
+        input: String,
+        depth: Int = Int.MAX_VALUE,
+        instrumentation: (MinusLettersInInvocation) -> Unit
+    ): List<String> = mutableListOf<String>().apply {
+        process(
+            input = WordInfo(input.uppercase().replace(" ", "")),
+            words = wordInfos,
+            collector = { wordInfos -> addAll(wordInfos.combinations()) },
+            depth = depth,
+            instrumentation = instrumentation
+        )
+    }
 }
 
 private fun process(
