@@ -131,12 +131,14 @@ internal fun List<WordInfo>.combinations(): Set<String> {
 
 private fun List<WordInfo>.permuteInto(
     collector: MutableSet<String>,
-    prefix: String = ""
+    prefix: MutableList<String> = mutableListOf()
 ) {
     when (this.size) {
-        0 -> collector.add(prefix.substring(1).split(" ").sorted().joinToString(" "))
+        0 -> collector.add(prefix.sorted().joinToString(" "))
         else -> this.first().words.forEach { word ->
-            this.subList(1, this.size).permuteInto(collector, prefix = "$prefix $word")
+            prefix.add(word)
+            this.subList(1, this.size).permuteInto(collector, prefix = prefix)
+            prefix.removeLast()
         }
     }
 }
