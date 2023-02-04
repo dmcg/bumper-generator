@@ -51,9 +51,9 @@ class AnagramSpeedTests {
     @Test
     fun `anagrams for REFACTORING TO instrumented`() {
         val invocations = mutableListOf<MinusLettersInInvocation>()
-        words.anagramsFor(
+        generator.anagramsFor(
             "REFACTORING TO",
-            instrumentation = { invocations.add(it) }
+            instrumentation = { invocations.add(it) },
         )
         val invocationCounts: Map<Pair<Int, Int>, Int> = invocations.map { invocation ->
             invocation.receiver.word.length to invocation.parameter.word.length
@@ -69,7 +69,7 @@ private fun report(input: String, repetitions: Int, expectedResultCount: Int = -
     val timeAndResultCounts = (1..repetitions).map {
         val resultCount: Int
         val timeMs = measureTimeMillis {
-            resultCount = words.anagramsFor(input).size
+            resultCount = generator.anagramsFor(input).size
         }
         resultCount to timeMs
     }
