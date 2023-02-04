@@ -39,42 +39,33 @@ class AnagramImplementationTests {
 
     @Test fun `empty WordInfo permutations`() {
         assertEquals(
-            emptyList(),
-            emptyList<WordInfo>().permutations()
+            emptySet(),
+            emptyList<WordInfo>().combinations()
         )
     }
 
     @Test fun `single WordInfo permutations`() {
         assertEquals(
-            listOf("ACT", "CAT"),
-            listOf(WordInfo(listOf("ACT", "CAT"))).permutations()
+            setOf("ACT", "CAT"),
+            listOf(WordInfo(listOf("ACT", "CAT"))).combinations()
         )
     }
 
     @Test fun `WordInfo permutations`() {
         assertEquals(
-            listOf("ACT TAB", "ACT BAT", "CAT TAB", "CAT BAT"),
+            setOf("ACT TAB", "ACT BAT", "CAT TAB", "BAT CAT"),
             listOf(
                 WordInfo(listOf("ACT", "CAT")),
                 WordInfo(listOf("TAB", "BAT"))
-            ).permutations()
+            ).combinations()
         )
         assertEquals(
-            listOf("ACT A TAB", "ACT A BAT", "CAT A TAB", "CAT A BAT"),
+            setOf("A ACT TAB", "A ACT BAT", "A CAT TAB", "A BAT CAT"),
             listOf(
                 WordInfo(listOf("ACT", "CAT")),
                 WordInfo(listOf("A")),
                 WordInfo(listOf("TAB", "BAT"))
-            ).permutations()
+            ).combinations()
         )
     }
 }
-
-private fun List<WordInfo>.permutations(): List<String> {
-    val collector = mutableListOf<String>()
-    permuteInto(collector)
-    return collector
-}
-
-
-
