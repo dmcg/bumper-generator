@@ -124,19 +124,17 @@ private fun String.minusLettersIn(word: String): String {
 }
 
 
-private fun List<WordInfo>.combinations(): Set<String> =
-    mutableListOf<String>().apply { permuteInto(this) }
-        .map { it.split(" ").sorted().joinToString(" ") }
-        .toSet()
+internal fun List<WordInfo>.combinations(): Set<String> =
+    mutableSetOf<String>().apply { permuteInto(this) }
 
-internal fun List<WordInfo>.permuteInto(
-    collector: MutableList<String>,
+private fun List<WordInfo>.permuteInto(
+    collector: MutableSet<String>,
     prefix: String = ""
 ) {
     when (this.size) {
         0 -> {}
         1 -> this.first().words.forEach { word ->
-            collector.add("$prefix $word".substring(1))
+            collector.add("$prefix $word".substring(1).split(" ").sorted().joinToString(" "))
         }
         else -> this.first().words.forEach { word ->
             this.subList(1, this.size).permuteInto(collector, prefix = "$prefix $word")
