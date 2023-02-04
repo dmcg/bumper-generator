@@ -18,7 +18,7 @@ class Anagrams(words: List<String>) {
         instrumentation: (MinusLettersInInvocation) -> Unit
     ): List<String> = mutableListOf<String>().apply {
         process(
-            input = WordInfo(input.uppercase().replace(" ", "")),
+            input = SingleWordInfo(input.uppercase().replace(" ", "")),
             words = wordInfos,
             collector = { wordInfos -> addAll(wordInfos.combinations()) },
             depth = depth,
@@ -47,7 +47,7 @@ private fun process(
                 collector(prefix + wordInfo)
 
             depth > 1 -> process(
-                input = WordInfo(remainingLetters),
+                input = SingleWordInfo(remainingLetters),
                 words = remainingCandidateWords,
                 collector = collector,
                 prefix = prefix + wordInfo,
@@ -65,21 +65,31 @@ internal data class MinusLettersInInvocation(
     val receiver: WordInfo, val parameter: WordInfo
 )
 
-internal class WordInfo(
-    val words: List<String>,
-    val letterBitSet: Int
-) {
-    val word: String = words.first()
+internal fun WordInfo(words: List<String>) = when (words.size) {
+    1 -> SingleWordInfo(words.first())
+    0 -> error("")
+    else -> MultiWordInfo(words)
+}
 
-    constructor(word: String) : this(listOf(word), word.toLetterBitSet())
-    constructor(words: List<String>) : this(words, words.first().toLetterBitSet())
+internal sealed class WordInfo(val letterBitSet: Int) {
+    abstract val words: List<String>
+    abstract val exemplum: String
 
     fun couldBeMadeFromTheLettersIn(input: WordInfo) =
         !letterBitSet.hasLettersNotIn(input.letterBitSet) &&
-                this.word.couldBeMadeFromTheLettersIn(input.word)
+                this.exemplum.couldBeMadeFromTheLettersIn(input.exemplum)
 
     fun minusLettersIn(other: WordInfo): String =
-        this.word.minusLettersIn(other.word)
+        this.exemplum.minusLettersIn(other.exemplum)
+}
+
+internal class SingleWordInfo(override val exemplum: String) : WordInfo(exemplum.toLetterBitSet()) {
+    override val words: List<String>
+        get() = listOf(exemplum)
+}
+
+internal class MultiWordInfo(override val words: List<String>) : WordInfo(words.first().toLetterBitSet()) {
+    override val exemplum: String = words.first()
 }
 
 internal fun Int.hasLettersNotIn(other: Int) = (this and other) != this
@@ -137,6 +147,7 @@ internal fun List<WordInfo>.permuteInto(
         1 -> this.first().words.forEach { word ->
             collector.add("$prefix $word".substring(1))
         }
+
         else -> this.first().words.forEach { word ->
             this.subList(1, this.size).permuteInto(collector, prefix = "$prefix $word")
         }
