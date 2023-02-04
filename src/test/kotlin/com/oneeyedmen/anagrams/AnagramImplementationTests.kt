@@ -9,16 +9,16 @@ class AnagramImplementationTests {
 
     @Test
     fun `could be made from the letters in`() {
-        assertTrue("A".couldBeMadeFromTheLettersIn("ACAT"))
-        assertTrue("CAT".couldBeMadeFromTheLettersIn("ACAT"))
-        assertTrue("AA".couldBeMadeFromTheLettersIn("ACAT"))
-        assertTrue("ACT".couldBeMadeFromTheLettersIn("ACAT"))
+        assertTrue("A".couldBeMadeFromTheLettersIn("A CAT"))
+        assertTrue("CAT".couldBeMadeFromTheLettersIn("A CAT"))
+        assertTrue("AA".couldBeMadeFromTheLettersIn("A CAT"))
+        assertTrue("ACT".couldBeMadeFromTheLettersIn("A CAT"))
 
-        assertFalse("H".couldBeMadeFromTheLettersIn("ACAT"))
-        assertFalse("AAH".couldBeMadeFromTheLettersIn("ACAT"))
-        assertFalse("TAT".couldBeMadeFromTheLettersIn("ACAT"))
+        assertFalse("H".couldBeMadeFromTheLettersIn("A CAT"))
+        assertFalse("AAH".couldBeMadeFromTheLettersIn("A CAT"))
+        assertFalse("TAT".couldBeMadeFromTheLettersIn("A CAT"))
 
-        assertTrue("".couldBeMadeFromTheLettersIn("ACAT"))
+        assertTrue("".couldBeMadeFromTheLettersIn("A CAT"))
         assertTrue("".couldBeMadeFromTheLettersIn(""))
     }
 
