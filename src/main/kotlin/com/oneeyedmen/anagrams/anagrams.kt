@@ -5,7 +5,7 @@ class Anagrams(words: List<String>) {
     private val wordInfos = words.sortedByDescending { it.length }
         .groupBy { String(it.toCharArray().sortedArray()) }
         .values
-        .map { WordInfo(it.map { it.toCharArray() }) }
+        .map { WordInfo(it) }
 
     fun anagramsFor(
         input: String,
@@ -18,7 +18,7 @@ class Anagrams(words: List<String>) {
         instrumentation: (MinusLettersInInvocation) -> Unit
     ): List<String> = mutableListOf<String>().apply {
         process(
-            input = WordInfo(input.uppercase().replace(" ", "").toCharArray()),
+            input = WordInfo(input.uppercase().replace(" ", "")),
             words = wordInfos,
             collector = { wordInfos -> addAll(wordInfos.combinations()) },
             depth = depth,
@@ -66,25 +66,25 @@ internal data class MinusLettersInInvocation(
 )
 
 internal class WordInfo(
-    val words: List<CharArray>,
-    private val letterBitSet: Int
+    val words: List<String>,
+    val letterBitSet: Int
 ) {
-    val word: CharArray = words.first()
+    val word: String = words.first()
 
-    constructor(word: CharArray) : this(listOf(word), word.toLetterBitSet())
-    constructor(words: List<CharArray>) : this(words, words.first().toLetterBitSet())
+    constructor(word: String) : this(listOf(word), word.toLetterBitSet())
+    constructor(words: List<String>) : this(words, words.first().toLetterBitSet())
 
     fun couldBeMadeFromTheLettersIn(input: WordInfo) =
         !letterBitSet.hasLettersNotIn(input.letterBitSet) &&
                 this.word.couldBeMadeFromTheLettersIn(input.word)
 
-    fun minusLettersIn(other: WordInfo): CharArray =
+    fun minusLettersIn(other: WordInfo): String =
         this.word.minusLettersIn(other.word)
 }
 
 internal fun Int.hasLettersNotIn(other: Int) = (this and other) != this
 
-internal fun CharArray.toLetterBitSet(): Int {
+internal fun String.toLetterBitSet(): Int {
     var result = 0
     this.forEach { char ->
         result = result or (1 shl char - 'A')
@@ -92,10 +92,10 @@ internal fun CharArray.toLetterBitSet(): Int {
     return result
 }
 
-internal fun CharArray.couldBeMadeFromTheLettersIn(letters: CharArray): Boolean {
-    if (this.size > letters.size)
+internal fun String.couldBeMadeFromTheLettersIn(letters: String): Boolean {
+    if (this.length > letters.length)
         return false
-    val remainingLetters = letters.copyOf()
+    val remainingLetters = letters.toCharArray()
     this.forEach { char ->
         val index = remainingLetters.indexOf(char)
         if (index == -1)
@@ -105,21 +105,21 @@ internal fun CharArray.couldBeMadeFromTheLettersIn(letters: CharArray): Boolean 
     return true
 }
 
-private fun CharArray.minusLettersIn(word: CharArray): CharArray {
-    val remainingLetters = this.copyOf()
+private fun String.minusLettersIn(word: String): String {
+    val remainingLetters = this.toCharArray()
     word.forEach { char ->
         val index = remainingLetters.indexOf(char)
         if (index == -1)
             error("BAD")
         remainingLetters[index] = '*'
     }
-    val result = CharArray(this.size - word.size)
+    val result = CharArray(this.length - word.length)
     var index = 0
     remainingLetters.forEach { char ->
         if (char != '*')
             result[index++] = char
     }
-    return result
+    return String(result)
 }
 
 
@@ -135,10 +135,10 @@ internal fun List<WordInfo>.permuteInto(
     when (this.size) {
         0 -> {}
         1 -> this.first().words.forEach { word ->
-            collector.add("$prefix ${String(word)}".substring(1))
+            collector.add("$prefix $word".substring(1))
         }
         else -> this.first().words.forEach { word ->
-            this.subList(1, this.size).permuteInto(collector, prefix = "$prefix ${String(word)}")
+            this.subList(1, this.size).permuteInto(collector, prefix = "$prefix $word")
         }
     }
 }
