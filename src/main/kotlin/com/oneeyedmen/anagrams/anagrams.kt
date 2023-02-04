@@ -12,7 +12,7 @@ internal fun List<String>.anagramsFor(
 ): List<String> {
     val groups = this
         .sortedByDescending { it.length }
-        .groupBy { String(it.toCharArray().sortedArray()) }
+        .groupBy { it.sortedLetters() }
         .values
         .map { WordInfo(it) }
     val result = mutableListOf<String>()
@@ -142,3 +142,5 @@ private fun List<WordInfo>.permuteInto(
         }
     }
 }
+
+private fun String.sortedLetters() = String(toCharArray().apply { sort() })
