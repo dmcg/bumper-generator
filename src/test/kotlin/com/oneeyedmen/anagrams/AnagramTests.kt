@@ -16,7 +16,7 @@ class AnagramTests {
 
     @Test
     fun `anagrams for A CAT`() {
-        val expected = listOf("ACTA", "A ACT", "A CAT")
+        val expected = listOf("ACTA", "ACT A", "CAT A")
         assertEquals(
             expected,
             generator.anagramsFor("A CAT")

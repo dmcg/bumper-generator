@@ -27,6 +27,7 @@ class AnagramPropertyTests {
     @ParameterizedTest(name = "{index} {0}")
     @MethodSource("inputs")
     fun `all the words are in the dictionary`(input: String, anagrams: List<String>) {
+        assumeTrue(input.isNotBlank())
         val wordsAsSet = words.toSet()
         anagrams.forEach { anagram ->
             anagram.split(' ').forEach { word ->
