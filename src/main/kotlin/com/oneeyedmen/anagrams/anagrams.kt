@@ -25,41 +25,41 @@ class AnagramGenerator(words: List<String>) {
         )
         return wordTrees.anagrams()
     }
-}
 
-private fun process(
-    inputLetters: Letters,
-    words: List<WordInfo>,
-    depth: Int,
-    instrumentation: (MinusLettersInInvocation) -> Unit = {}
-): List<WordTree> {
-    val candidateWords = words.filter { wordInfo ->
-        wordInfo.couldBeMadeFrom(inputLetters)
-    }
-    var remainingCandidateWords = candidateWords
-    val result = mutableListOf<WordTree>()
-    candidateWords.forEach { wordInfo ->
-        instrumentation(MinusLettersInInvocation(inputLetters, wordInfo))
-        val remainingLetters = inputLetters.minusLettersIn(wordInfo.word)
-        when {
-            remainingLetters.isEmpty() ->
-                result.add(WordTree(wordInfo))
+    private fun process(
+        inputLetters: Letters,
+        words: List<WordInfo>,
+        depth: Int,
+        instrumentation: (MinusLettersInInvocation) -> Unit = {}
+    ): List<WordTree> {
+        val candidateWords = words.filter { wordInfo ->
+            wordInfo.couldBeMadeFrom(inputLetters)
+        }
+        var remainingCandidateWords = candidateWords
+        val result = mutableListOf<WordTree>()
+        candidateWords.forEach { wordInfo ->
+            instrumentation(MinusLettersInInvocation(inputLetters, wordInfo))
+            val remainingLetters = inputLetters.minusLettersIn(wordInfo.word)
+            when {
+                remainingLetters.isEmpty() ->
+                    result.add(WordTree(wordInfo))
 
-            depth > 1 -> {
-                val wordResults = process(
-                    inputLetters = remainingLetters,
-                    words = remainingCandidateWords,
-                    depth = depth - 1,
-                    instrumentation = instrumentation
-                )
-                if (wordResults.isNotEmpty()) {
-                    result.add(WordTree(wordInfo, wordResults))
+                depth > 1 -> {
+                    val wordResults = process(
+                        inputLetters = remainingLetters,
+                        words = remainingCandidateWords,
+                        depth = depth - 1,
+                        instrumentation = instrumentation
+                    )
+                    if (wordResults.isNotEmpty()) {
+                        result.add(WordTree(wordInfo, wordResults))
+                    }
                 }
             }
+            remainingCandidateWords = remainingCandidateWords.subListFrom(1)
         }
-        remainingCandidateWords = remainingCandidateWords.subListFrom(1)
+        return result
     }
-    return result
 }
 
 internal class WordInfo(
