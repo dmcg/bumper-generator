@@ -69,9 +69,17 @@ internal class WordInfo(
     val word: String = words.first()
     private val letterBitSet: Int = word.toLetterBitSet()
 
-    fun couldBeMadeFrom(letters: Letters) =
-        !letterBitSet.hasLettersNotIn(letters.letterBitSet) &&
-                this.word.couldBeMadeFrom(letters)
+    fun couldBeMadeFrom(letters: Letters): Boolean {
+        if (letterBitSet.hasLettersNotIn(letters.letterBitSet) || word.length > letters.length)
+            return false
+        val remainingLetterCounts = letters.letterCounts.copyOf()
+        word.forEach { char ->
+            val newCount = --remainingLetterCounts[char - 'A']
+            if (newCount < 0)
+                return false
+        }
+        return true
+    }
 }
 
 internal class Letters(
@@ -113,18 +121,6 @@ internal fun String.toLetterBitSet(): Int {
         result = result or (1 shl char - 'A')
     }
     return result
-}
-
-internal fun String.couldBeMadeFrom(letters: Letters): Boolean {
-    if (this.length > letters.length)
-        return false
-    val remainingLetterCounts = letters.letterCounts.copyOf()
-    this.forEach { char ->
-        val newCount = --remainingLetterCounts[char - 'A']
-        if (newCount < 0)
-            return false
-    }
-    return true
 }
 
 internal fun List<WordInfo>.combinations(): Set<String> = when {

@@ -79,4 +79,4 @@ class AnagramImplementationTests {
 }
 
 fun String.couldBeMadeFromTheLettersIn(letters: String): Boolean =
-    couldBeMadeFrom(Letters(letters.replace(" ", "")))
+    WordInfo(listOf(this)).couldBeMadeFrom(Letters(letters.replace(" ", "")))
