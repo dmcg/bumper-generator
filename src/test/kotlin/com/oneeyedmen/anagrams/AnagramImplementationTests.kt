@@ -30,11 +30,11 @@ class AnagramImplementationTests {
         assertEquals(2, "B".toLetterBitSet())
         assertEquals(3, "BA".toLetterBitSet())
 
-        assertFalse("A".toLetterBitSet().hasLettersNotIn("A".toLetterBitSet()))
-        assertFalse("AA".toLetterBitSet().hasLettersNotIn("A".toLetterBitSet()))
-        assertFalse("A".toLetterBitSet().hasLettersNotIn("AA".toLetterBitSet()))
-        assertTrue("AB".toLetterBitSet().hasLettersNotIn("A".toLetterBitSet()))
-        assertFalse("A".toLetterBitSet().hasLettersNotIn("AB".toLetterBitSet()))
+        assertFalse("A".toLetterBitSet() !in "A".toLetterBitSet())
+        assertFalse("AA".toLetterBitSet() !in "A".toLetterBitSet())
+        assertFalse("A".toLetterBitSet() !in "AA".toLetterBitSet())
+        assertTrue("AB".toLetterBitSet() !in "A".toLetterBitSet())
+        assertFalse("A".toLetterBitSet() !in "AB".toLetterBitSet())
     }
 
     @Test fun `empty WordInfo combinations`() {
