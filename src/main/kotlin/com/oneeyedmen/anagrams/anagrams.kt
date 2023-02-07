@@ -59,9 +59,7 @@ private fun process(
             )
         }
         prefix.removeLast()
-        remainingCandidateWords = remainingCandidateWords.subList(
-            1, remainingCandidateWords.size
-        )
+        remainingCandidateWords = remainingCandidateWords.subListFrom(1)
     }
 }
 
@@ -142,13 +140,15 @@ private fun List<WordInfo>.permuteInto(
         0 -> collector.add(prefix.sorted().joinToString(" "))
         else -> this.first().words.forEach { word ->
             prefix.add(word)
-            this.subList(1, this.size).permuteInto(collector, prefix = prefix)
+            this.subListFrom(1).permuteInto(collector, prefix = prefix)
             prefix.removeLast()
         }
     }
 }
 
 private fun String.sortedLetters() = String(toCharArray().apply { sort() })
+
+private fun <T> List<T>.subListFrom(fromIndex: Int) = subList(fromIndex, size)
 
 // Just for instrumentation
 internal data class MinusLettersInInvocation(
