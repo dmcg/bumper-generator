@@ -67,10 +67,10 @@ internal class WordInfo(
     val words: List<String>,
 ) {
     val word: String = words.first()
-    private val letterBitSet: Int = word.toLetterBitSet()
+    private val letterBitSet: LetterBitSet = word.toLetterBitSet()
 
     fun couldBeMadeFrom(letters: Letters): Boolean {
-        if (letterBitSet.hasLettersNotIn(letters.letterBitSet) || word.length > letters.length)
+        if (letterBitSet !in letters.letterBitSet || word.length > letters.length)
             return false
         val remainingLetterCounts = letters.letterCounts.copyOf()
         word.forEach { char ->
@@ -84,7 +84,7 @@ internal class WordInfo(
 
 internal class Letters(
     val length: Int,
-    val letterBitSet: Int,
+    val letterBitSet: LetterBitSet,
     val letterCounts: IntArray,
 ) {
     constructor(word: String) : this(
@@ -113,9 +113,12 @@ internal class Letters(
     }
 }
 
-internal fun Int.hasLettersNotIn(other: Int) = (this and other) != this
+typealias LetterBitSet = Int
 
-internal fun String.toLetterBitSet(): Int {
+operator fun LetterBitSet.contains(other: LetterBitSet): Boolean =
+    (this and other) == other
+
+internal fun String.toLetterBitSet(): LetterBitSet {
     var result = 0
     this.forEach { char ->
         result = result or (1 shl char - 'A')
