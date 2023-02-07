@@ -29,22 +29,22 @@ class AnagramSpeedTests {
 
     @Test
     fun `anagrams for REFACTORING TO K`() {
-        report("REFACTORING TO K", repetitions = 1, expectedResultCount = 222225)
+        report("REFACTORING TO K", repetitions = 10, expectedResultCount = 222225)
     }
 
     @Test
     fun `anagrams for REFACTORING TO KO`() {
-        report("REFACTORING TO KO", repetitions = 1, expectedResultCount = 1038259)
+        report("REFACTORING TO KO", repetitions = 10, expectedResultCount = 1038259)
     }
 
     @Test
     fun `anagrams for REFACTORING TO KOT`() {
-        report("REFACTORING TO KOT", repetitions = 1, expectedResultCount = 1609238)
+        report("REFACTORING TO KOT", repetitions = 10, expectedResultCount = 1609238)
     }
 
     @Test
     fun `anagrams for REFACTORING TO KOTL`() {
-        report("REFACTORING TO KOTL", repetitions = 1, expectedResultCount = 5412104)
+        report("REFACTORING TO KOTL", repetitions = 10, expectedResultCount = 5412104)
     }
 
     @Disabled
