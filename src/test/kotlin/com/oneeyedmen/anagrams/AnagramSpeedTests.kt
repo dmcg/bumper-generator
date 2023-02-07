@@ -67,6 +67,8 @@ class AnagramSpeedTests {
 
 private fun report(input: String, repetitions: Int, expectedResultCount: Int = -1) {
     val timeAndResultCounts = (1..repetitions).map {
+        System.gc()
+        System.runFinalization()
         val resultCount: Int
         val timeMs = measureTimeMillis {
             resultCount = generator.anagramsFor(input).size
