@@ -2,7 +2,7 @@
 <module external.linked.project.id="bumper-generator:main" external.linked.project.path="$MODULE_DIR$/../.." external.root.project.path="$MODULE_DIR$/../.." external.system.id="GRADLE" external.system.module.group="com.oneeyedmen" external.system.module.type="sourceSet" external.system.module.version="1.0-SNAPSHOT" type="JAVA_MODULE" version="4">
   <component name="FacetManager">
     <facet type="kotlin-language" name="Kotlin">
-      <configuration version="5" platform="JVM 15" allPlatforms="JVM [15]" useProjectSettings="false">
+      <configuration version="5" platform="JVM 19" allPlatforms="JVM [19]" useProjectSettings="false">
         <compilerSettings>
           <option name="additionalArguments" value="-Xallow-no-source-files" />
         </compilerSettings>
@@ -108,7 +108,7 @@
               </args>
             </stringArg>
             <stringArg name="destination" arg="$MODULE_DIR$/../../build/classes/kotlin/main" />
-            <stringArg name="jvmTarget" arg="15" />
+            <stringArg name="jvmTarget" arg="19" />
             <stringArg name="moduleName" arg="bumper-generator" />
             <stringArg name="apiVersion" arg="1.8" />
             <stringArg name="languageVersion" arg="1.8" />

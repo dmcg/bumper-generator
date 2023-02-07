@@ -17,8 +17,8 @@ dependencies {
     implementation("com.madgag:animated-gif-lib:1.4")
     testImplementation(kotlin("test"))
     testImplementation("com.oneeyedmen:okeydoke:1.3.3")
-    testImplementation("org.junit:junit-bom:5.9.2")
-    testImplementation("org.junit.jupiter:junit-jupiter-params")
+//    testImplementation("org.junit:junit-bom:5.9.2")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.9.2")
 }
 
 tasks.test {
@@ -26,5 +26,5 @@ tasks.test {
 }
 
 tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "15"
+    kotlinOptions.jvmTarget = "19"
 }
