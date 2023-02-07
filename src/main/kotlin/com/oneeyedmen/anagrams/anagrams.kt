@@ -17,50 +17,49 @@ class AnagramGenerator(words: List<String>) {
         depth: Int = Int.MAX_VALUE,
         instrumentation: (MinusLettersInInvocation) -> Unit,
     ): List<String> {
-        val result = mutableListOf<String>()
-        process(
+        val wordTrees = process(
             inputLetters = Letters(input.uppercase().replace(" ", "")),
             words = wordInfos,
-            collector = { wordInfos -> result.addAll(wordInfos.combinations()) },
             depth = depth,
             instrumentation = instrumentation
         )
-        return result
+        return wordTrees.anagrams()
     }
 }
 
 private fun process(
     inputLetters: Letters,
     words: List<WordInfo>,
-    collector: (List<WordInfo>) -> Unit,
-    prefix: MutableList<WordInfo> = mutableListOf(),
     depth: Int,
     instrumentation: (MinusLettersInInvocation) -> Unit = {}
-) {
+): List<WordTree> {
     val candidateWords = words.filter { wordInfo ->
         wordInfo.couldBeMadeFrom(inputLetters)
     }
     var remainingCandidateWords = candidateWords
+    val result = mutableListOf<WordTree>()
     candidateWords.forEach { wordInfo ->
         instrumentation(MinusLettersInInvocation(inputLetters, wordInfo))
         val remainingLetters = inputLetters.minusLettersIn(wordInfo.word)
-        prefix.add(wordInfo)
         when {
             remainingLetters.isEmpty() ->
-                collector(prefix)
+                result.add(WordTree(wordInfo))
 
-            depth > 1 -> process(
-                inputLetters = remainingLetters,
-                words = remainingCandidateWords,
-                collector = collector,
-                prefix = prefix,
-                depth = depth - 1,
-                instrumentation = instrumentation
-            )
+            depth > 1 -> {
+                val wordResults = process(
+                    inputLetters = remainingLetters,
+                    words = remainingCandidateWords,
+                    depth = depth - 1,
+                    instrumentation = instrumentation
+                )
+                if (wordResults.isNotEmpty()) {
+                    result.add(WordTree(wordInfo, wordResults))
+                }
+            }
         }
-        prefix.removeLast()
         remainingCandidateWords = remainingCandidateWords.subListFrom(1)
     }
+    return result
 }
 
 internal class WordInfo(
@@ -111,6 +110,31 @@ internal class Letters(
             remainingLetterCounts
         )
     }
+}
+
+private class WordTree(
+    val wordInfo: WordInfo,
+    val next: List<WordTree> = emptyList(),
+)
+
+private fun List<WordTree>.anagrams(): List<String> {
+    val result = mutableListOf<String>()
+    val anagram = mutableListOf<WordInfo>()
+
+    fun visit(wordTrees: List<WordTree>) {
+        when {
+            wordTrees.isEmpty() -> result.addAll(anagram.combinations())
+            else -> wordTrees.forEach { wordTree ->
+                anagram.add(wordTree.wordInfo)
+                visit(wordTree.next)
+                anagram.removeLast()
+            }
+        }
+    }
+
+    visit(this)
+
+    return result
 }
 
 typealias LetterBitSet = Int
