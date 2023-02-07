@@ -77,3 +77,6 @@ class AnagramImplementationTests {
         )
     }
 }
+
+fun String.couldBeMadeFromTheLettersIn(letters: String): Boolean =
+    couldBeMadeFrom(Letters(letters.replace(" ", "")))
