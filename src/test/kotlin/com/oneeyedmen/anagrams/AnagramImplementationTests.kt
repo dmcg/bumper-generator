@@ -53,26 +53,27 @@ class AnagramImplementationTests {
 
     @Test fun `WordInfo combinations`() {
         assertEquals(
-            setOf("ACT TAB", "ACT BAT", "CAT TAB", "BAT CAT"),
+            setOf("ACT TAB", "ACT BAT", "CAT TAB", "CAT BAT"),
             listOf(
                 WordInfo(listOf("ACT", "CAT")),
                 WordInfo(listOf("TAB", "BAT"))
             ).combinations()
         )
         assertEquals(
-            setOf("A ACT TAB", "A ACT BAT", "A CAT TAB", "A BAT CAT"),
+            setOf("ACT A TAB", "ACT A BAT", "CAT A TAB", "CAT A BAT"),
             listOf(
                 WordInfo(listOf("ACT", "CAT")),
                 WordInfo(listOf("A")),
                 WordInfo(listOf("TAB", "BAT"))
             ).combinations()
         )
+        val wordInfo = WordInfo(listOf("ACT", "CAT"))
         assertEquals(
-            setOf("A ACT ACT", "A ACT CAT", "A CAT CAT"),
+            setOf("ACT A ACT", "ACT A CAT", "CAT A CAT"),
             listOf(
-                WordInfo(listOf("ACT", "CAT")),
+                wordInfo,
                 WordInfo(listOf("A")),
-                WordInfo(listOf("ACT", "CAT"))
+                wordInfo
             ).combinations()
         )
     }
@@ -80,3 +81,8 @@ class AnagramImplementationTests {
 
 fun String.couldBeMadeFromTheLettersIn(letters: String): Boolean =
     WordInfo(listOf(this)).couldBeMadeFrom(Letters(letters.replace(" ", "")))
+
+internal fun List<WordInfo>.combinations(): Set<String> = when {
+    this.isEmpty() -> emptySet()
+    else -> mutableListOf<String>().apply { permuteInto(this) }.toSet()
+}

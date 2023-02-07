@@ -161,7 +161,7 @@ private fun List<WordTree>.anagrams(): List<String> {
 
     fun visit(wordTrees: List<WordTree>) {
         when {
-            wordTrees.isEmpty() -> result.addAll(anagram.combinations())
+            wordTrees.isEmpty() -> anagram.permuteInto(result)
             else -> wordTrees.forEach { wordTree ->
                 anagram.add(wordTree.wordInfo)
                 visit(wordTree.next)
@@ -188,21 +188,24 @@ internal fun String.toLetterBitSet(): LetterBitSet {
     return result
 }
 
-internal fun List<WordInfo>.combinations(): Set<String> = when {
-    this.isEmpty() -> emptySet()
-    else -> mutableSetOf<String>().apply { permuteInto(this) }
-}
-
-private fun List<WordInfo>.permuteInto(
-    collector: MutableSet<String>,
-    prefix: MutableList<String> = mutableListOf()
+internal fun List<WordInfo>.permuteInto(
+    collector: MutableList<String>,
+    prefix: MutableList<String> = mutableListOf(),
+    wordIndexes: MutableMap<WordInfo, Int> = mutableMapOf<WordInfo, Int>().withDefault { 0 }
 ) {
     when (this.size) {
-        0 -> collector.add(prefix.sorted().joinToString(" "))
-        else -> this.first().words.forEach { word ->
-            prefix.add(word)
-            this.subListFrom(1).permuteInto(collector, prefix = prefix)
-            prefix.removeLast()
+        0 -> collector.add(prefix.joinToString(" "))
+        else -> {
+            val wordInfo = this.first()
+            val wordIndex = wordIndexes.getValue(wordInfo)
+            wordInfo.words.forEachIndexed { index, word ->
+                if (index < wordIndex) return@forEachIndexed
+                prefix.add(word)
+                wordIndexes[wordInfo] = index
+                this.subListFrom(1).permuteInto(collector, prefix, wordIndexes)
+                prefix.removeLast()
+            }
+            wordIndexes[wordInfo] = wordIndex
         }
     }
 }
