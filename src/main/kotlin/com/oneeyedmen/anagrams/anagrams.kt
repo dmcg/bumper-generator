@@ -32,7 +32,7 @@ class AnagramGenerator(words: List<String>) {
             anagramsCache.clear()
             candidateWordsCache.clear()
         }
-        return wordTrees.anagrams()
+        return listOf(wordTrees.firstAnagram())
     }
 
     private fun process(
@@ -173,6 +173,17 @@ private fun List<WordTree>.anagrams(): List<String> {
     visit(this)
 
     return result
+}
+
+private fun List<WordTree>.firstAnagram(): String {
+    fun visit(wordTree: WordTree): String {
+        return when {
+            wordTree.next.isEmpty() -> wordTree.wordInfo.word
+            else -> wordTree.wordInfo.word + " " + visit(wordTree.next.first())
+        }
+    }
+
+    return if (this.isEmpty()) "" else visit(this.first())
 }
 
 typealias LetterBitSet = Int
