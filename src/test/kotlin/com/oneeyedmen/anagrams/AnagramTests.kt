@@ -34,14 +34,6 @@ class AnagramTests {
         )
     }
 
-    @Test
-    @EnabledIfSystemProperty(named = "run-slow-tests", matches = "true")
-    fun `anagrams for REFACTORING TO KOTLIN depth 3`(approver: Approver) {
-        approver.assertApproved(
-            generator.anagramsFor("REFACTORING TO KOTLIN", depth = 3).joinToString("\n")
-        )
-    }
-
     @Suppress("unused")
     companion object {
         @RegisterExtension

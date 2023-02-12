@@ -7,30 +7,25 @@ class AnagramGenerator(words: List<String>) {
         .values
         .map { words -> WordInfo(words) }
 
-    private val anagramsCache = mutableMapOf<Letters, MutableMap<Int, List<WordTree>>>()
-    private val candidateWordsCache = mutableMapOf<Letters, List<WordInfo>>()
+    private val anagramsCache = mutableMapOf<Letters, List<WordTree>>()
 
     fun anagramsFor(
         input: String,
-        depth: Int = Int.MAX_VALUE,
         keepCache: Boolean = false,
-    ): List<String> = anagramsFor(input, depth, keepCache, instrumentation = {})
+    ): List<String> = anagramsFor(input, keepCache, instrumentation = {})
 
     internal fun anagramsFor(
         input: String,
-        depth: Int = Int.MAX_VALUE,
         keepCache: Boolean = false,
         instrumentation: (MinusLettersInInvocation) -> Unit,
     ): List<String> {
         val wordTrees = process(
             inputLetters = Letters(input.uppercase().replace(" ", "")),
             words = wordInfos,
-            depth = depth,
             instrumentation = instrumentation
         )
         if (!keepCache) {
             anagramsCache.clear()
-            candidateWordsCache.clear()
         }
         return listOf(wordTrees.firstAnagram())
     }
@@ -38,35 +33,26 @@ class AnagramGenerator(words: List<String>) {
     private fun process(
         inputLetters: Letters,
         words: List<WordInfo>,
-        depth: Int,
         instrumentation: (MinusLettersInInvocation) -> Unit = {}
     ): List<WordTree> {
-        val candidateWords = candidateWordsCache.getOrPut(inputLetters) {
-            words.filter { wordInfo ->
+        return anagramsCache.getOrPut(inputLetters) {
+            val candidateWords = words.filter { wordInfo ->
                 wordInfo.couldBeMadeFrom(inputLetters)
             }
-        }
-
-        return anagramsCache.getOrPut(inputLetters) { mutableMapOf() }.getOrPut(depth) {
             val result = mutableListOf<WordTree>()
             candidateWords.forEach { wordInfo ->
                 instrumentation(MinusLettersInInvocation(inputLetters, wordInfo))
                 val remainingLetters = inputLetters.minusLettersIn(wordInfo.word)
-                when {
-                    remainingLetters.isEmpty() ->
-                        result.add(WordTree(wordInfo))
-
-                    depth > 1 -> {
-                        val wordResults = process(
-                            inputLetters = remainingLetters,
-                            words = candidateWords,
-                            depth = if (depth == Int.MAX_VALUE) depth else depth - 1,
-                            instrumentation = instrumentation
-                        )
-                        if (wordResults.isNotEmpty()) {
-                            result.add(WordTree(wordInfo, wordResults))
-                        }
-                    }
+                if (remainingLetters.isEmpty()) {
+                    result.add(WordTree(wordInfo))
+                }
+                val wordResults = process(
+                    inputLetters = remainingLetters,
+                    words = candidateWords,
+                    instrumentation = instrumentation
+                )
+                if (wordResults.isNotEmpty()) {
+                    result.add(WordTree(wordInfo, wordResults))
                 }
             }
             result
