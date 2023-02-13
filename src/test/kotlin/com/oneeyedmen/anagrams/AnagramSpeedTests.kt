@@ -86,7 +86,7 @@ private fun report(input: String, repetitions: Int, expectedResultCount: Int = -
         timeAndResultCounts.forEach { (count, _) -> assertEquals(expectedResultCount, count) }
 }
 
-private fun List<Double>.culledMeanAndDeviation(): Pair<Double, Double> = when {
+fun List<Double>.culledMeanAndDeviation(): Pair<Double, Double> = when {
     isEmpty() -> Double.NaN to Double.NaN
     size == 1 || size == 2 -> this.meanAndDeviation()
     else -> sorted().subList(1, size - 1).meanAndDeviation()
