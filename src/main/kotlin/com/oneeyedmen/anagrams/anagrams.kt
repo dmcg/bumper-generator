@@ -5,54 +5,76 @@ class AnagramGenerator(words: List<String>) {
     private val wordInfos = words.sortedByDescending { it.length }
         .groupBy { it.sortedLetters() }
         .values
-        .map { words -> WordInfo(words) }
+        .mapIndexed { index, words -> WordInfo(words, index) }
 
-    private val anagramsCache = mutableMapOf<Letters, List<WordTree>>()
+    private val anagramsCache = mutableMapOf<Letters, MutableMap<Int, MutableMap<IntRange, List<WordTree>>>>()
+    private val candidateWordsCache = mutableMapOf<Letters, List<WordInfo>>()
 
     fun anagramsFor(
         input: String,
+        depth: Int = Int.MAX_VALUE,
         keepCache: Boolean = false,
-    ): List<String> = anagramsFor(input, keepCache, instrumentation = {})
+    ): List<String> = anagramsFor(input, depth, keepCache, instrumentation = {})
 
     internal fun anagramsFor(
         input: String,
+        depth: Int = Int.MAX_VALUE,
         keepCache: Boolean = false,
         instrumentation: (MinusLettersInInvocation) -> Unit,
     ): List<String> {
         val wordTrees = process(
             inputLetters = Letters(input.uppercase().replace(" ", "")),
             words = wordInfos,
+            depth = depth,
             instrumentation = instrumentation
         )
         if (!keepCache) {
             anagramsCache.clear()
+            candidateWordsCache.clear()
         }
-        return listOf(wordTrees.firstAnagram())
+        return wordTrees.anagrams()
     }
 
     private fun process(
         inputLetters: Letters,
         words: List<WordInfo>,
+        index: Int = 0,
+        depth: Int,
         instrumentation: (MinusLettersInInvocation) -> Unit = {}
     ): List<WordTree> {
-        return anagramsCache.getOrPut(inputLetters) {
-            val candidateWords = words.filter { wordInfo ->
+        val candidateWords = candidateWordsCache.getOrPut(inputLetters) {
+            words.filter { wordInfo ->
                 wordInfo.couldBeMadeFrom(inputLetters)
             }
+        }
+
+        val firstIndex = candidateWords.indexOfFirst { word -> word.index >= index }
+        if (firstIndex == candidateWords.size) {
+            return emptyList()
+        }
+        val indexRange = (candidateWords.getOrNull(firstIndex - 1)?.index?.plus(1) ?: 0)..candidateWords[firstIndex].index
+
+        return anagramsCache.getOrPut(inputLetters) { mutableMapOf() }.getOrPut(depth) { mutableMapOf() }.getOrPut(indexRange) {
             val result = mutableListOf<WordTree>()
-            candidateWords.forEach { wordInfo ->
+            candidateWords.subListFrom(firstIndex).forEach { wordInfo ->
                 instrumentation(MinusLettersInInvocation(inputLetters, wordInfo))
                 val remainingLetters = inputLetters.minusLettersIn(wordInfo.word)
-                if (remainingLetters.isEmpty()) {
-                    result.add(WordTree(wordInfo))
-                }
-                val wordResults = process(
-                    inputLetters = remainingLetters,
-                    words = candidateWords,
-                    instrumentation = instrumentation
-                )
-                if (wordResults.isNotEmpty()) {
-                    result.add(WordTree(wordInfo, wordResults))
+                when {
+                    remainingLetters.isEmpty() ->
+                        result.add(WordTree(wordInfo))
+
+                    depth > 1 -> {
+                        val wordResults = process(
+                            inputLetters = remainingLetters,
+                            words = candidateWords,
+                            index = wordInfo.index,
+                            depth = if (depth == Int.MAX_VALUE) depth else depth - 1,
+                            instrumentation = instrumentation
+                        )
+                        if (wordResults.isNotEmpty()) {
+                            result.add(WordTree(wordInfo, wordResults))
+                        }
+                    }
                 }
             }
             result
@@ -62,6 +84,7 @@ class AnagramGenerator(words: List<String>) {
 
 internal class WordInfo(
     val words: List<String>,
+    val index: Int = 0,
 ) {
     val word: String = words.first()
     private val letterBitSet: LetterBitSet = word.toLetterBitSet()
@@ -152,17 +175,6 @@ private fun List<WordTree>.anagrams(): List<String> {
     return result
 }
 
-private fun List<WordTree>.firstAnagram(): String {
-    fun visit(wordTree: WordTree): String {
-        return when {
-            wordTree.next.isEmpty() -> wordTree.wordInfo.word
-            else -> wordTree.wordInfo.word + " " + visit(wordTree.next.first())
-        }
-    }
-
-    return if (this.isEmpty()) "" else visit(this.first())
-}
-
 typealias LetterBitSet = Int
 
 operator fun LetterBitSet.contains(other: LetterBitSet): Boolean =
@@ -201,6 +213,23 @@ internal fun List<WordInfo>.permuteInto(
 private fun String.sortedLetters() = String(toCharArray().apply { sort() })
 
 private fun <T> List<T>.subListFrom(fromIndex: Int) = subList(fromIndex, size)
+
+/**
+ * Uses binary search to find index of first element that comply with the predicate.
+ */
+private fun <T> List<T>.indexOfFirst(predicate: (T) -> Boolean): Int {
+    var from = -1
+    var to = this.size
+    while (from + 1 < to) {
+        val m = (from + to) ushr 1
+        if (predicate(this[m])) {
+            to = m
+        } else {
+            from = m
+        }
+    }
+    return to
+}
 
 // Just for instrumentation
 internal data class MinusLettersInInvocation(
