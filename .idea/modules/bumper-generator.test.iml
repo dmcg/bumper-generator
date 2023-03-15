@@ -3,6 +3,7 @@
   <component name="FacetManager">
     <facet type="kotlin-language" name="Kotlin">
       <configuration version="5" platform="JVM 19" allPlatforms="JVM [19]" useProjectSettings="false">
+        <additionalVisibleModuleNames>bumper-generator:main</additionalVisibleModuleNames>
         <compilerSettings>
           <option name="additionalArguments" value="-Xallow-no-source-files" />
         </compilerSettings>
@@ -17,7 +18,7 @@
                 <arg>$MODULE_DIR$/../../build/classes/kotlin/main</arg>
                 <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-jdk8/1.8.0/ed04f49e186a116753ad70d34f0ac2925d1d8020/kotlin-stdlib-jdk8-1.8.0.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.seleniumhq.selenium/selenium-java/4.0.0/fd6b0bc92d6801e8ec48d98133d68d769b15ac27/selenium-java-4.0.0.jar</arg>
-                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.github.bonigarcia/webdrivermanager/5.2.3/de01a1043138e9e789adba8f7dce1684328cc67f/webdrivermanager-5.2.3.jar</arg>
+                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.github.bonigarcia/webdrivermanager/5.3.2/a63ced3a4dd0c1a4fea105f16249ccf7489305d0/webdrivermanager-5.3.2.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.madgag/animated-gif-lib/1.4/b6ab3aa0a27499b6677153ebd59bbecb7ae8af41/animated-gif-lib-1.4.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-test-junit5/1.8.0/7e6aaaa3873184631f12f50bbf9bbf2e51f05eb6/kotlin-test-junit5-1.8.0.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-test/1.8.0/cbc4be6bae290df37622e1b3221281d14ba24aa/kotlin-test-1.8.0.jar</arg>
@@ -44,16 +45,16 @@
                 <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.seleniumhq.selenium/selenium-http/4.0.0/8b470195fa7c1f4f290396bb246ccad34ff86e26/selenium-http-4.0.0.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.seleniumhq.selenium/selenium-json/4.0.0/1e74474caa89d548cfebcc14cb07f2fd8fbaa5a1/selenium-json-4.0.0.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.seleniumhq.selenium/selenium-api/4.0.0/49c25f4e5b22c26700643efba6b66cc007686ca3/selenium-api-4.0.0.jar</arg>
-                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.docker-java/docker-java-transport-httpclient5/3.2.13/921d8f5a7f272e5eb113d5643e51cb0f02053259/docker-java-transport-httpclient5-3.2.13.jar</arg>
-                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents.client5/httpclient5/5.1.3/13c984b7b881afcff3a7f0bb95878724a48a4b66/httpclient5-5.1.3.jar</arg>
+                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.docker-java/docker-java-transport-httpclient5/3.2.14/c9c0d77563af598e1a4d81ddb58ec822a5ac8ccc/docker-java-transport-httpclient5-3.2.14.jar</arg>
+                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents.client5/httpclient5/5.2.1/c900514d3446d9ce5d9dbd90c21192048125440/httpclient5-5.2.1.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.asynchttpclient/async-http-client/2.12.3/6dfc91814cc8b3bc3327246d0e5df36911b9a623/async-http-client-2.12.3.jar</arg>
-                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.docker-java/docker-java/3.2.13/d1f8b31f74db0b3cc3f684bb76da940b4e2b65e5/docker-java-3.2.13.jar</arg>
-                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.docker-java/docker-java-core/3.2.13/5a3af141f152d36aad519c7b3915251111592b60/docker-java-core-3.2.13.jar</arg>
+                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.docker-java/docker-java/3.2.14/54539b4db069f25308f5578a3ca3269096bd5ab2/docker-java-3.2.14.jar</arg>
+                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.docker-java/docker-java-core/3.2.14/a8376740104ef96096e97d959110e1fdad5ef2ca/docker-java-core-3.2.14.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.slf4j/jcl-over-slf4j/1.7.30/cd92524ea19d27e5b94ecd251e1af729cffdfe15/jcl-over-slf4j-1.7.30.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.asynchttpclient/async-http-client-netty-utils/2.12.3/ad99d8622931ed31367d0fef7fa17eb62e033fb3/async-http-client-netty-utils-2.12.3.jar</arg>
-                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.docker-java/docker-java-api/3.2.13/5817ef8f770cb7e740d590090bf352df9491f3c1/docker-java-api-3.2.13.jar</arg>
-                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/1.7.36/6c62681a2f655b49963a5983b8b0950a6120ae14/slf4j-api-1.7.36.jar</arg>
-                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.9.1/2cc2131b98ebfb04e2b2c7dfb84431f4045096b/gson-2.9.1.jar</arg>
+                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.docker-java/docker-java-api/3.2.14/84dec5949c8d50547f79e6c9c97da84ebab6a17b/docker-java-api-3.2.14.jar</arg>
+                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/2.0.6/88c40d8b4f33326f19a7d3c0aaf2c7e8721d4953/slf4j-api-2.0.6.jar</arg>
+                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.10.1/b3add478d4382b78ea20b1671390a858002feb6c/gson-2.10.1.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.brotli/dec/0.1.2/c26a897ae0d524809eef1c786cc6183b4ddcc3b/dec-0.1.2.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-lang3/3.12.0/c6842c86792ff03b9f1d1fe2aab8dc23aa6c6f0e/commons-lang3-3.12.0.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.opentest4j/opentest4j/1.2.0/28c11eb91f9b6d8e200631d46e20a7f407f2a046/opentest4j-1.2.0.jar</arg>
@@ -94,11 +95,10 @@
                 <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.ous/jtoml/2.0.0/2085505b2b173e14b2a7702edd703ce185fd6206/jtoml-2.0.0.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/net.bytebuddy/byte-buddy/1.11.19/3ee8778b8e5287c57c9c3f3fd4c1c23e93e8779a/byte-buddy-1.11.19.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-exec/1.3/8dfb9facd0830a27b1b5f29f84593f0aeee7773b/commons-exec-1.3.jar</arg>
-                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.docker-java/docker-java-transport/3.2.13/e9d308d1822181a9d48c99739f5eca014ec89199/docker-java-transport-3.2.13.jar</arg>
-                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/net.java.dev.jna/jna/5.8.0/3551d8d827e54858214107541d3aff9c615cb615/jna-5.8.0.jar</arg>
-                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents.core5/httpcore5-h2/5.1.3/4664b59b09f5ee008e37a963bbb92f4068e91696/httpcore5-h2-5.1.3.jar</arg>
-                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents.core5/httpcore5/5.1.3/d1638d1e5f2793f187d4144c702a93524ba6fd3b/httpcore5-5.1.3.jar</arg>
-                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/commons-codec/commons-codec/1.15/49d94806b6e3dc933dacbd8acb0fdbab8ebd1e5d/commons-codec-1.15.jar</arg>
+                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.docker-java/docker-java-transport/3.2.14/931ad11b0d91285ee501d2db3e964e376f06def6/docker-java-transport-3.2.14.jar</arg>
+                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/net.java.dev.jna/jna/5.12.1/b1e93a735caea94f503e95e6fe79bf9cdc1e985d/jna-5.12.1.jar</arg>
+                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents.core5/httpcore5-h2/5.2/698bd8c759ccc7fd7398f3179ff45d0e5a7ccc16/httpcore5-h2-5.2.jar</arg>
+                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents.core5/httpcore5/5.2/ab7d251b8dfa3f2878f1eefbcca0e1fc0ebeba27/httpcore5-5.2.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.guava/failureaccess/1.0.1/1dcf1de382a0bf95a3d8b0849546c88bac1292c9/failureaccess-1.0.1.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.guava/listenablefuture/9999.0-empty-to-avoid-conflict-with-guava/b421526c5f297295adef1c886e5246c39d4ac629/listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.code.findbugs/jsr305/3.0.2/25ea2e8b0c338a877313bd4672d3fe056ea78f0d/jsr305-3.0.2.jar</arg>
@@ -158,7 +158,7 @@
     <orderEntry type="module" module-name="bumper-generator.main" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.0" level="project" />
     <orderEntry type="library" name="Gradle: org.seleniumhq.selenium:selenium-java:4.0.0" level="project" />
-    <orderEntry type="library" name="Gradle: io.github.bonigarcia:webdrivermanager:5.2.3" level="project" />
+    <orderEntry type="library" name="Gradle: io.github.bonigarcia:webdrivermanager:5.3.2" level="project" />
     <orderEntry type="library" name="Gradle: com.madgag:animated-gif-lib:1.4" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-test:1.8.0" level="project" />
     <orderEntry type="library" name="Gradle: com.oneeyedmen:okeydoke:1.3.3" level="project" />
@@ -179,11 +179,11 @@
     <orderEntry type="library" name="Gradle: org.seleniumhq.selenium:selenium-support:4.0.0" level="project" />
     <orderEntry type="library" name="Gradle: org.seleniumhq.selenium:selenium-remote-driver:4.0.0" level="project" />
     <orderEntry type="library" name="Gradle: org.seleniumhq.selenium:selenium-api:4.0.0" level="project" />
-    <orderEntry type="library" name="Gradle: com.github.docker-java:docker-java-transport-httpclient5:3.2.13" level="project" />
-    <orderEntry type="library" name="Gradle: org.apache.httpcomponents.client5:httpclient5:5.1.3" level="project" />
-    <orderEntry type="library" name="Gradle: com.github.docker-java:docker-java:3.2.13" level="project" />
-    <orderEntry type="library" name="Gradle: org.slf4j:slf4j-api:1.7.36" level="project" />
-    <orderEntry type="library" name="Gradle: com.google.code.gson:gson:2.9.1" level="project" />
+    <orderEntry type="library" name="Gradle: com.github.docker-java:docker-java-transport-httpclient5:3.2.14" level="project" />
+    <orderEntry type="library" name="Gradle: org.apache.httpcomponents.client5:httpclient5:5.2.1" level="project" />
+    <orderEntry type="library" name="Gradle: com.github.docker-java:docker-java:3.2.14" level="project" />
+    <orderEntry type="library" name="Gradle: org.slf4j:slf4j-api:2.0.6" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.code.gson:gson:2.10.1" level="project" />
     <orderEntry type="library" name="Gradle: org.brotli:dec:0.1.2" level="project" />
     <orderEntry type="library" name="Gradle: org.apache.commons:commons-lang3:3.12.0" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-test-junit5:1.8.0" level="project" />
@@ -221,12 +221,11 @@
     <orderEntry type="library" name="Gradle: io.ous:jtoml:2.0.0" level="project" />
     <orderEntry type="library" name="Gradle: net.bytebuddy:byte-buddy:1.11.19" level="project" />
     <orderEntry type="library" name="Gradle: org.apache.commons:commons-exec:1.3" level="project" />
-    <orderEntry type="library" name="Gradle: com.github.docker-java:docker-java-transport:3.2.13" level="project" />
-    <orderEntry type="library" name="Gradle: net.java.dev.jna:jna:5.8.0" level="project" />
-    <orderEntry type="library" name="Gradle: org.apache.httpcomponents.core5:httpcore5-h2:5.1.3" level="project" />
-    <orderEntry type="library" name="Gradle: org.apache.httpcomponents.core5:httpcore5:5.1.3" level="project" />
-    <orderEntry type="library" name="Gradle: commons-codec:commons-codec:1.15" level="project" />
-    <orderEntry type="library" name="Gradle: com.github.docker-java:docker-java-core:3.2.13" level="project" />
+    <orderEntry type="library" name="Gradle: com.github.docker-java:docker-java-transport:3.2.14" level="project" />
+    <orderEntry type="library" name="Gradle: net.java.dev.jna:jna:5.12.1" level="project" />
+    <orderEntry type="library" name="Gradle: org.apache.httpcomponents.core5:httpcore5-h2:5.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.apache.httpcomponents.core5:httpcore5:5.2" level="project" />
+    <orderEntry type="library" name="Gradle: com.github.docker-java:docker-java-core:3.2.14" level="project" />
     <orderEntry type="library" name="Gradle: org.slf4j:jcl-over-slf4j:1.7.30" level="project" />
     <orderEntry type="library" name="Gradle: org.junit.platform:junit-platform-commons:1.9.2" level="project" />
     <orderEntry type="library" name="Gradle: com.google.auto:auto-common:1.0" level="project" />
@@ -246,7 +245,7 @@
     <orderEntry type="library" name="Gradle: io.netty:netty-codec:4.1.67.Final" level="project" />
     <orderEntry type="library" name="Gradle: io.netty:netty-resolver:4.1.68.Final" level="project" />
     <orderEntry type="library" name="Gradle: io.opentelemetry:opentelemetry-sdk-metrics:1.6.0-alpha" level="project" />
-    <orderEntry type="library" name="Gradle: com.github.docker-java:docker-java-api:3.2.13" level="project" />
+    <orderEntry type="library" name="Gradle: com.github.docker-java:docker-java-api:3.2.14" level="project" />
     <orderEntry type="library" name="Gradle: commons-io:commons-io:2.6" level="project" />
     <orderEntry type="library" name="Gradle: org.apache.commons:commons-compress:1.21" level="project" />
     <orderEntry type="library" name="Gradle: com.fasterxml.jackson.core:jackson-databind:2.10.3" level="project" />

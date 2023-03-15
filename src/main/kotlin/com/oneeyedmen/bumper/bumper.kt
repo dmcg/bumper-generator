@@ -3,8 +3,11 @@ package com.oneeyedmen.bumper
 import com.madgag.gif.fmsware.AnimatedGifEncoder
 import com.madgag.gif.fmsware.GifDecoder
 import io.github.bonigarcia.wdm.WebDriverManager
+import io.github.bonigarcia.wdm.managers.ChromeDriverManager
 import org.intellij.lang.annotations.Language
 import org.openqa.selenium.By
+import org.openqa.selenium.chrome.ChromeDriver
+import org.openqa.selenium.chrome.ChromeOptions
 import java.awt.Color
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
@@ -14,6 +17,7 @@ import java.nio.file.Path
 import java.time.Duration
 import java.util.*
 import kotlin.io.path.writeText
+
 
 fun renderAnagram(anagram: String, imageSpec: ImageSpec) {
     val file = Files.createTempDirectory("bumper").resolve("html.html")
@@ -46,7 +50,11 @@ fun removeLastFewFramesFrom(image: ByteArray): ByteArray {
 }
 
 private fun getGeneratedImageBytesFrom(file: Path): ByteArray {
-    val driver = WebDriverManager.chromedriver().create().apply {
+    val option = ChromeOptions().apply {
+        addArguments("--remote-allow-origins=*")
+    }
+    WebDriverManager.chromedriver().setup()
+    val driver = ChromeDriver(option).apply {
         manage().timeouts().implicitlyWait(Duration.ofMinutes(1))
     }
     driver.get(file.toUri().toString())
