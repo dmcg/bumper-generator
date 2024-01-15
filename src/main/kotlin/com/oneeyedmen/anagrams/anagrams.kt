@@ -190,20 +190,22 @@ internal fun String.toLetterBitSet(): LetterBitSet {
 
 internal fun List<WordInfo>.permuteInto(
     collector: MutableList<String>,
-    prefix: MutableList<String> = mutableListOf(),
+    prefix: String = "",
     wordIndexes: MutableMap<WordInfo, Int> = mutableMapOf<WordInfo, Int>().withDefault { 0 }
 ) {
     when (this.size) {
-        0 -> collector.add(prefix.joinToString(" "))
+        0 -> collector.add(prefix)
         else -> {
             val wordInfo = this.first()
             val wordIndex = wordIndexes.getValue(wordInfo)
             wordInfo.words.forEachIndexed { index, word ->
                 if (index < wordIndex) return@forEachIndexed
-                prefix.add(word)
                 wordIndexes[wordInfo] = index
-                this.subListFrom(1).permuteInto(collector, prefix, wordIndexes)
-                prefix.removeLast()
+                this.subListFrom(1).permuteInto(
+                    collector,
+                    if (prefix.isEmpty()) word else "$prefix $word",
+                    wordIndexes
+                )
             }
             wordIndexes[wordInfo] = wordIndex
         }
